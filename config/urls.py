@@ -16,10 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from social.views import IndexTemplateView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('crud.urls')),
-    path('cat/', include('crud.urls')),
-    path('profile/', include('social.urls'))
+    path('', IndexTemplateView.as_view(), name='index'),
+    path('crud/', include('crud.urls')),
+    path('social/', include('social.urls')),
 ]

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<h1>{{user.profile.name}} 님 안녕하세요</h1>
+<a href="{% url 'social:logout' %}">로그아웃</a>
+<a href="{% url 'social:edit' user.pk %}">수정하기</a>
+{% else %}
+<a href="{% url 'social:login' %}">로그인</a>
+<a href="{% url 'social:signup' %}">회원가입</a>
+{% endif %}
+{% endblock content %}
