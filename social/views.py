@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import generic
 from django.views import View
 from django.contrib import auth
+from django.contrib.auth.models import User
 
 from social.services import UserService, SignupDto, LoginDto, UpdateDto
 # Create your views here.
@@ -78,3 +79,11 @@ class EditView(View) :
             introduction=post_data['introduction'],
             pk=self.kwargs['pk']
         )
+    
+def delete(request, user_pk):
+    user = User.objects.filter(pk=user_pk)
+
+    user.update(is_active=False)
+    auth.logout(request)
+
+    return redirect('index')

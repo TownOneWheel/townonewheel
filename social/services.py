@@ -32,6 +32,7 @@ ERROR_MSG = {
     'NO_EXIST_ID': '존재하지 않는 아이디 입니다',
     'MISSING_INPUT': '항목을 모두 채워주세요',
     'PASSWORD_CHECK': '비밀번호를 확인해주세요',
+    'RESIGN_FROM': '탈퇴한 아이디 입니다',
 }
 
 class UserService():
@@ -42,9 +43,11 @@ class UserService():
     def signup(dto: SignupDto):
         if(not dto.userid or not dto.password or not dto.password_check or not dto.name or not dto.email or not dto.introduction):
             return {'error' : {'state' : True, 'msg' : ERROR_MSG['MISSING_INPUT']}}
-        user = User.objects.filter(username=dto.userid)
+        user = User.objects.filter(username=dto.userid, is_active=True)
         if (len(user)>0):
-            return {'error' : {'state': True, 'msg':ERROR_MSG['EXIST_ID']}}
+            return {'error' : {'state': True, 'msg':ERROR_MSG['EXIST_ID']}}    
+        if User.objects.filter(username=dto.userid, is_active=False):
+            return {'error': {'state': True, 'msg':ERROR_MSG['RESIGN_FROM']}}
         if (dto.password != dto.password_check):
             return {'error': {'state': True, 'msg': ERROR_MSG['PASSWORD_CHECK']}}
 
@@ -57,7 +60,7 @@ class UserService():
     def login(dto: LoginDto):
         if (not dto.userid or not dto.password):
             return {'error': {'state' : True, 'msg' : ERROR_MSG['MISSING_INPUT']}}
-        user = User.objects.filter(username=dto.userid)
+        user = User.objects.filter(username=dto.userid,is_active=True)
         if (len(user) == 0):
             return {'error': {'state': True, 'msg': ERROR_MSG['NO_EXIST_ID']}}
         # if (len(user) > 0 and user.first().password!=dto.password):
