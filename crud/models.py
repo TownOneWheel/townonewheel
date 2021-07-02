@@ -9,7 +9,7 @@ class Cat(models.Model):
     color = models.CharField(max_length=20, null=True, blank=True)
     neutering = models.CharField(max_length=10, null=True, blank=True)
     friendly = models.CharField(max_length=64, default='0')
-    location = models.TextField()
+    location = models.TextField(default=True)
     upload_user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='upload', null=True, blank=True)
     # cat_like = models.TextField()
 
