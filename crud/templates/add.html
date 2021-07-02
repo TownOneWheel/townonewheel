@@ -5,7 +5,7 @@
     {% csrf_token %}
   <p>이름 : <input type="text" name="catname" placeholder="길냥이 이름"></p>
   <p>개냥이 지수 : <input type="text" name="friendly" placeholder="사람과의 친밀도 (%)"></p>
-  <input type="file" name="img">
+  <input type="file" name="img" multiple>
   <div>성별 : <select name="gender">
     <option value="male">수컷</option>
     <option value="female">암컷</option>
