@@ -5,9 +5,13 @@ from django.contrib import auth
 from django.contrib.auth.models import User
 
 from social.services import UserService, SignupDto, LoginDto, UpdateDto
-# Create your views here.
+from crud.models import Cat, CatImage
 
-class IndexTemplateView(generic.TemplateView):
+
+class IndexTemplateView(generic.ListView):
+    model = Cat
+    context_object_name = 'cats'
+    queryset = Cat.objects.all()
     template_name = 'index.html'
 
 class SignupView(View):
@@ -16,7 +20,7 @@ class SignupView(View):
 
     def post(self, request, *args, **kwargs):
         signup_dto = self._build_signup_dto(request.POST)
-        result =UserService.signup(signup_dto)
+        result = UserService.signup(signup_dto)
 
         if(result['error']['state']):
             context = {'error': result['error']}
