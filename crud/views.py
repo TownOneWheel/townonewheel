@@ -8,15 +8,13 @@ from datetime import datetime
 
 from crud.models import Cat, CatImage
 
-
-
+    
 class AddView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'add.html')
     
     def post(self, request, *args, **kwargs):
         file = request.FILES.get('img')
-        print(request)
         session = Session(
             aws_access_key_id=AWS_ACCESS_KEY_ID,
             aws_secret_access_key=AWS_SECRET_ACCESS_KEY,

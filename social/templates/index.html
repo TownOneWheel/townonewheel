@@ -87,6 +87,12 @@
     // resultDiv.innerHTML = message;
     // });
 
+
     
 </script>
+<!-- 고양이 불러오기 -->
+{% for cat in cats %}
+{{cat.catname}}
+<img src="{{cat.image.first.url}}" alt="catimage">
+{% endfor %}
 {% endblock content %}
