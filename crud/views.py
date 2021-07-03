@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.views.generic import View
+from django.views.generic import View, DetailView
 from config.settings import AWS_ACCESS_KEY_ID, AWS_S3_REGION_NAME, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME
 
 import boto3
@@ -42,3 +42,31 @@ class AddView(View):
                 url=s3_url+now+file.name,
             ) 
         return redirect('index')
+
+class CatDetailView(DetailView):
+    model = Cat
+    context_object_name = 'cat'
+    template_name = 'cat_detail.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['image_lists'] = CatImage.objects.filter(cat=kwargs['object'])
+        return context
+
+class EditView(View):
+    def get(self, request, *args, **kwargs):
+        cat = Cat.objects.filter(pk=kwargs['pk']).first()
+        return render(request, 'cat_edit.html', {'cat': cat})
+    
+    def post(self, request, *args, **kwargs):
+        print('--')
+        Cat.objects.filter(pk=kwargs['pk']).update(
+            catname=request.POST['catname'],
+            friendly=request.POST['friendly'],
+            gender=request.POST['gender'],
+            color=request.POST['color'],
+            neutering=request.POST['neutering'],
+            location=request.POST['location'],
+            upload_user=request.user,
+        )
+        return redirect('crud:cat_detail', kwargs['pk'])

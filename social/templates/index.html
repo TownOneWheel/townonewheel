@@ -93,6 +93,8 @@
 <!-- 고양이 불러오기 -->
 {% for cat in cats %}
 {{cat.catname}}
+<a href="{% url 'crud:cat_detail' cat.pk %}">
 <img src="{{cat.image.first.url}}" alt="catimage">
+</a>
 {% endfor %}
 {% endblock content %}
