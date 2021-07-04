@@ -5,6 +5,12 @@ const options = {
   level: 3,
 };
 
+// 마커 이미지 커스텀
+const imageSrc = 'https://img.icons8.com/ios-glyphs/60/000000/pet-commands-summon.png',
+  imageSize = new kakao.maps.Size(30, 30), // 마커이미지의 크기입니다
+  imageOption = { offset: new kakao.maps.Point(15, 30) },
+  markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
 // 2. api로 지도 생성하여 map 변수에 할당
 const map = new kakao.maps.Map(container, options);
 // 3. 마커를 위치시킬 포지션을 position 변수에 할당 (서울숲 위/경도 또는 사용자 위치 받아와서 할당)
@@ -12,8 +18,9 @@ const position = new kakao.maps.LatLng(37.547076399306, 127.04020267241);
 // 4. 할당한 position정보를 담아 marker 변수에 마커 객체 생성
 let marker = new kakao.maps.Marker({
   map: map, // 5번과 중복되는 역할인듯?
-  // position: position, //10-1. 마커를 특정 위치가 아니라 지도 중심좌표에 위치시키려면 map.getCenter()
+  position: position, //10-1. 마커를 특정 위치가 아니라 지도 중심좌표에 위치시키려면 map.getCenter()
   clickable: true, // 8-2. 지도에 클릭이벤트가 아니라 마커에 클릭이벤트를 발생시킨다.
+  image: markerImage,
 });
 // 5. 4에서 생성한 마커 객체 marker을 2에서 생성한 지도 객체 위에 세팅 (이 map을 세팅하는 위치가 중요할듯)
 marker.setMap(map);
@@ -55,7 +62,7 @@ if (navigator.geolocation) {
   displayMarker(locPosition, message);
 }
 
-// 지도에 마커와 인포윈도우를 표시하는 함수입니다
+// 지도에 마커와 인포윈도우를 표시하는 함수
 function displayMarker(locPosition, message) {
   // 마커를 생성합니다
   const marker = new kakao.maps.Marker({
