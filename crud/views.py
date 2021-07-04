@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.views.generic import View, DetailView
+from django.db.models import Q
 from config.settings import AWS_ACCESS_KEY_ID, AWS_S3_REGION_NAME, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME
 
 import boto3
@@ -70,3 +71,13 @@ class EditView(View):
             upload_user=request.user,
         )
         return redirect('crud:cat_detail', kwargs['pk'])
+
+class SearchView(View):
+    def get(self, request, *args, **kwargs):
+        keyword = request.GET.get('keyword', '')
+        search_cat = {}
+        if keyword:
+            search_cat = Cat.objects.filter(
+                Q(catname__icontains=keyword)
+            ).first()
+        return render(request, 'search.html', { 'search_cat': search_cat })
