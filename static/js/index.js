@@ -12,7 +12,7 @@ const position = new kakao.maps.LatLng(37.547076399306, 127.04020267241);
 // 4. 할당한 position정보를 담아 marker 변수에 마커 객체 생성
 let marker = new kakao.maps.Marker({
   map: map, // 5번과 중복되는 역할인듯?
-  position: position, //10-1. 마커를 특정 위치가 아니라 지도 중심좌표에 위치시키려면 map.getCenter()
+  // position: position, //10-1. 마커를 특정 위치가 아니라 지도 중심좌표에 위치시키려면 map.getCenter()
   clickable: true, // 8-2. 지도에 클릭이벤트가 아니라 마커에 클릭이벤트를 발생시킨다.
 });
 // 5. 4에서 생성한 마커 객체 marker을 2에서 생성한 지도 객체 위에 세팅 (이 map을 세팅하는 위치가 중요할듯)
@@ -33,35 +33,48 @@ kakao.maps.event.addListener(marker, 'mouseover', function () {
 kakao.maps.event.addListener(marker, 'mouseout', function () {
   infowindow.close();
 });
-// 8-2. 마커에 클릭이벤트를 발생시키기 위해 4번에 마커 객체를 생성하면서 clickable 옵션을 준다.
-// 8-3. 인포윈도우를 닫는 버튼을 생성하는 removable 옵션을 준다.
-// 8-4. 4에서 생성한 마커 객체의 클릭이벤트에 open/close 메서드를 등록한다.
-// kakao.maps.event.addListener(marker, 'click', function() {
-//   infowindow.open(map, marker);  // 마커 위에 인포윈도우를 표시합니다
-// });
 
-// // 9. 마커이미지 만들기
-// const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지 주소
-// imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기
-// imageOption = {offset: new kakao.maps.Point(27, 69)}; // 이미지 안에서의 마커의 좌표를 설정.
+if (navigator.geolocation) {
+  // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+  navigator.geolocation.getCurrentPosition(function (position) {
+    const lat = position.coords.latitude, // 위도
+      lon = position.coords.longitude; // 경도
 
-// const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
-// markerPosition = new kakao.maps.LatLng(37.54699, 127.09598);
+    const locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+      message = '<div style="padding:5px;">사용자가 있는 위치</div>'; // 인포윈도우에 표시될 내용입니다
 
-// // 10. 클릭한 위치에 마커 표시하는 법 : 4에서 마커 객체 생성할 때의 포지션을 map.getCenter()로 마커를 생성해둔다.
-// // 10-2. 지도에 클릭이벤트를 발생시킨다.
-// kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+    // 마커와 인포윈도우를 표시합니다
+    displayMarker(locPosition, message);
+  });
+} else {
+  // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
 
-// // 10-3. 클릭한 위도, 경도 정보 취득
-// const latlng = mouseEvent.latLng;
+  const locPosition = new kakao.maps.LatLng(37.547076399306, 127.04020267241),
+    message = 'geolocation을 사용할수 없어요..';
 
-// // 10-4. 마커 위치를 클릭한 위치로 이동
-// marker.setPosition(latlng);
+  displayMarker(locPosition, message);
+}
 
-// // 10-5. 마커 위치에 대해 정보를 가져와 텍스트로 출력하는 것 (우리는 필요없을듯)
-// let message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
-// message += '경도는 ' + latlng.getLng() + ' 입니다';
+// 지도에 마커와 인포윈도우를 표시하는 함수입니다
+function displayMarker(locPosition, message) {
+  // 마커를 생성합니다
+  const marker = new kakao.maps.Marker({
+    map: map,
+    position: locPosition,
+  });
 
-// const resultDiv = document.getElementById('clickLatlng');
-// resultDiv.innerHTML = message;
-// });
+  const iwContent = message, // 인포윈도우에 표시할 내용
+    iwRemoveable = true;
+
+  // 인포윈도우를 생성합니다
+  const infowindow = new kakao.maps.InfoWindow({
+    content: iwContent,
+    removable: iwRemoveable,
+  });
+
+  // 인포윈도우를 마커위에 표시합니다
+  infowindow.open(map, marker);
+
+  // 지도 중심좌표를 접속위치로 변경합니다
+  map.setCenter(locPosition);
+}
