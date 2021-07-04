@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<!--프로필 사진 -->
+<h3>{{user.profile.name}}</h3>
+<div>팔로워 {{user.relationship.followers.all.count}}</div>
+<div>팔로우 {{user.following.all.count}}</div>
+{% if request.user != user %}
+<form action="{% url 'social:relationship' user.pk %}" method='POST'>
+    {% csrf_token %}
+    {% if request.user in user.relationship.followers.all %}
+    <button type='submit'>팔로우 취소</button>
+    {% else %}
+    <button type='submit'>팔로우</button>
+    {% endif %}
+</form>
+{% endif %}
+
+{% endblock content %}

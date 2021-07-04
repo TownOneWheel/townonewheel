@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password
 from dataclasses import dataclass
-from .models import Profile
+from .models import Profile, Relationship
 
 @dataclass
 class SignupDto():
@@ -26,6 +26,11 @@ class UpdateDto() :
     introduction : str
     email: str
     pk : str
+
+@dataclass
+class RelationShipDto():
+    user_pk: str
+    requester: User
 
 ERROR_MSG = {
     'EXIST_ID': '이미 존재하는 아이디 입니다',
@@ -79,3 +84,16 @@ class UserService():
         Profile.objects.filter(pk=dto.pk).update(name=dto.name, introduction=dto.introduction, email=dto.email)
 
         return {'error':{'state':False}}
+
+class RelationShipService():
+    @staticmethod
+    def toggle(dto: RelationShipDto):
+        user = User.objects.filter(pk=dto.user_pk).first()
+        relationship = Relationship.objects.filter(user=user).first()
+        if (relationship is None):
+            relationship = Relationship.objects.create(user=user)
+        if (dto.requester in relationship.followers.all()):
+            relationship.followers.remove(dto.requester)
+            return { 'error' : { 'state': False }, 'data' : 'unfollowed' }
+        relationship.followers.add(dto.requester)
+        return { 'error' : { 'state': False }, 'data' : 'followed' }
