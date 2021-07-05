@@ -1,87 +1,116 @@
-// 1. 지도 div 취득 및 옵션 설정
-const container = document.getElementById('map');
-const options = {
-  center: new kakao.maps.LatLng(37.547076399306, 127.04020267241),
-  level: 3,
-};
-
-// 마커 이미지 커스텀
-const imageSrc = 'https://img.icons8.com/ios-glyphs/60/000000/pet-commands-summon.png',
-  imageSize = new kakao.maps.Size(30, 30), // 마커이미지의 크기입니다
-  imageOption = { offset: new kakao.maps.Point(15, 30) },
-  markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
-
-// 2. api로 지도 생성하여 map 변수에 할당
-const map = new kakao.maps.Map(container, options);
-// 3. 마커를 위치시킬 포지션을 position 변수에 할당 (서울숲 위/경도 또는 사용자 위치 받아와서 할당)
-const position = new kakao.maps.LatLng(37.547076399306, 127.04020267241);
-// 4. 할당한 position정보를 담아 marker 변수에 마커 객체 생성
-let marker = new kakao.maps.Marker({
-  map: map, // 5번과 중복되는 역할인듯?
-  position: position, //10-1. 마커를 특정 위치가 아니라 지도 중심좌표에 위치시키려면 map.getCenter()
-  clickable: true, // 8-2. 지도에 클릭이벤트가 아니라 마커에 클릭이벤트를 발생시킨다.
-  image: markerImage,
-});
-// 5. 4에서 생성한 마커 객체 marker을 2에서 생성한 지도 객체 위에 세팅 (이 map을 세팅하는 위치가 중요할듯)
-marker.setMap(map);
-
-// 6. 인포윈도우 태그 만들어 할당 (7은 마우스오버로 띄우기, 8은 클릭으로 창 여닫기)
-const infoWindowContent =
-  '<div class="info_window" style="padding:5px;">고양이 정보가 나타나는 곳</div>';
-// 7-1. 8-1. 인포윈도우 객체를 생성하여 infowindow 변수에 할당
-const infowindow = new kakao.maps.InfoWindow({
-  content: infoWindowContent,
-  removable: true, // 8-3. 인포윈도우를 닫을 수 있는 x버튼 표시 옵션
-});
-// 7-2. 4에서 생성한 마커 객체에 마우스오버와 마우스아웃 이벤트핸들러 open/close(api 메서드) 등록
-kakao.maps.event.addListener(marker, 'mouseover', function () {
-  infowindow.open(map, marker);
-});
-kakao.maps.event.addListener(marker, 'mouseout', function () {
-  infowindow.close();
-});
+const $mapContainer = document.getElementById('map'); //지도 div element 취득
 
 if (navigator.geolocation) {
-  // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+  console.log('lalalalal');
+  // GeoLocation가 활성화되어있는 경우 접속 위치 취득 및 콜백함수 호출
   navigator.geolocation.getCurrentPosition(function (position) {
-    const lat = position.coords.latitude, // 위도
-      lon = position.coords.longitude; // 경도
+    const lat = position.coords.latitude, // 위도 취득
+      lon = position.coords.longitude; // 경도 취득
+    console.log(lat, lon);
 
-    const locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-      message = '<div style="padding:5px;">사용자가 있는 위치</div>'; // 인포윈도우에 표시될 내용입니다
+    const mapOption = {
+      center: new kakao.maps.LatLng(lat, lon), // 지도의 중심좌표
+      level: 3, // 지도의 확대 레벨
+    };
+    const map = new kakao.maps.Map($mapContainer, mapOption); // 지도 생성 및 할당
 
-    // 마커와 인포윈도우를 표시합니다
-    displayMarker(locPosition, message);
+    // 마커 생성
+    const markerPosition = new kakao.maps.LatLng(lat, lon); // geolocation으로 취득한 위치에 마커 생성
+
+    const marker = new kakao.maps.Marker({
+      map: map,
+      draggable: true,
+      clickable: true,
+      position: markerPosition,
+      image: new kakao.maps.MarkerImage(
+        'https://img.icons8.com/ios-glyphs/60/000000/cat.png',
+        new kakao.maps.Size(40, 40),
+        { offset: new kakao.maps.Point(27, 40) }
+      ),
+    }); //마커 생성 및 할당
+
+    // 인포윈도우 생성
+    const infowindow = new kakao.maps.InfoWindow({
+      content: `<div style="padding:5px;">
+        <form action="/crud/add/" method="POST" enctype="multipart/form-data">
+      <p>이름 : <input type="text" name="catname" placeholder="길냥이 이름"></p>
+      <p>개냥이 지수 : <input type="text" name="friendly" placeholder="사람과의 친밀도 (%)"></p>
+      <input type="file" name="img" multiple>
+      <div>성별 : <select name="gender">
+        <option value="male">수컷</option>
+        <option value="female">암컷</option>
+        <option value="dont_know">모름</option>
+      </select></div>
+      <div>색상 : <select name="color">
+        <option value="yellow">노란색</option>
+        <option value="yellow">검은색</option>
+        <option value="yellow">흰색</option>
+        <option value="yellow">주황색</option>
+        <option value="yellow">회색</option>
+      </select></div>
+      <div>중성화 여부 : <select name="neutering">
+        <option value="O">O</option>
+        <option value="X">X</option>
+        <option value="dont_know">모름</option>
+      </select></div>
+      <p>발견 위치 : <input type="text" name="location" placeholder="활동 위치"></p>
+      <br>
+      <button type="submit">작성하기</button>
+    </form>
+    </div>`,
+      removable: true, //닫기 버튼 활성화
+    });
+
+    // 인포윈도우를 마커위에 표시
+    infowindow.open(map, marker);
+
+    // 클릭한 위치에 마커 생성
+    kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+      // 클릭한 위도, 경도 정보를 가져옵니다
+      const latlng = mouseEvent.latLng;
+
+      // 마커 위치를 클릭한 위치로 옮깁니다
+      marker.setPosition(latlng);
+      infowindow.open(map, marker);
+      console.log(latlng.getLat(), latlng.getLng());
+    });
   });
 } else {
-  // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+  console.log('lalala');
+  const mapOption = {
+    center: new kakao.maps.LatLng(37.547076399306, 127.04020267241), // 지도의 중심좌표
+    level: 10, // 지도의 확대 레벨
+  };
+  const map = new kakao.maps.Map($mapContainer, mapOption); // 지도를 생성합니다
 
-  const locPosition = new kakao.maps.LatLng(37.547076399306, 127.04020267241),
-    message = 'geolocation을 사용할수 없어요..';
-
-  displayMarker(locPosition, message);
-}
-
-// 지도에 마커와 인포윈도우를 표시하는 함수
-function displayMarker(locPosition, message) {
-  // 마커를 생성합니다
   const marker = new kakao.maps.Marker({
     map: map,
-    position: locPosition,
-  });
+    draggable: true,
+    clickable: true,
+    position: new kakao.maps.LatLng(37.547076399306, 127.04020267241),
+    image: new kakao.maps.MarkerImage(
+      'https://img.icons8.com/ios-glyphs/60/000000/cat.png',
+      new kakao.maps.Size(40, 40),
+      { offset: new kakao.maps.Point(27, 40) }
+    ),
+  }); //마커 생성 및 할당
 
-  const iwContent = message, // 인포윈도우에 표시할 내용
-    iwRemoveable = true;
-
-  // 인포윈도우를 생성합니다
+  // 인포윈도우 생성
   const infowindow = new kakao.maps.InfoWindow({
-    content: iwContent,
-    removable: iwRemoveable,
+    content: '<div style="padding:5px;">고양이가 이곳에 있나요?</div>',
+    removable: true, //닫기 버튼 활성화
   });
 
-  // 인포윈도우를 마커위에 표시합니다
+  // 인포윈도우를 마커위에 표시
   infowindow.open(map, marker);
 
-  // 지도 중심좌표를 접속위치로 변경합니다
-  map.setCenter(locPosition);
+  kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+    // 클릭한 위도, 경도 정보를 가져옵니다
+    const latlng = mouseEvent.latLng;
+
+    // 마커 위치를 클릭한 위치로 옮깁니다
+    marker.setPosition(latlng);
+    infowindow.open(map, marker);
+    console.log(latlng.getLat(), latlng.getLng());
+  });
 }

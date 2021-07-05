@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.views import generic
 from django.views import View
 from django.contrib import auth
@@ -6,12 +7,20 @@ from django.contrib import auth
 from social.services import UserService, SignupDto, LoginDto, UpdateDto
 from crud.models import Cat, CatImage
 
-
 class IndexTemplateView(generic.ListView):
     model = Cat
     context_object_name = 'cats'
     queryset = Cat.objects.all()
     template_name = 'index.html'
+
+    def post(self, request):
+        dummy_data = {
+            'name': '죠르디',
+            'type': '공룡',
+            'job': '편의점알바생',
+            'age': 5
+        }
+        return JsonResponse(dummy_data)
 
 class SignupView(View):
     def get(self, request, *args, **kwargs) :
