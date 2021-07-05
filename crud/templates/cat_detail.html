@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{cat.catname}}
+<br>
+{% for image_list in image_lists %}
+<img src="{{image_list.url}}" alt="catimage" style="height: 200px; width: 200px;">
+{% endfor %}
+{% if cat.upload_user == user %}
+<br>
+<a href="{% url 'crud:cat_edit' cat.pk %}">고양이 정보 수정하기</a>
+{% endif %}
+{% endblock content %}
