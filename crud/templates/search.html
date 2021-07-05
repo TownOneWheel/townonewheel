@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<form action="{% url 'crud:search' %}" method="GET">
+  {% csrf_token %}
+  <input type="text" name="keyword">
+  <button type="submit">검색</button>
+</form>
+<br>
+<br>
+{% if search_cat %}
+<a href="{% url 'crud:cat_detail' search_cat.pk %}">{{search_cat.catname}}</a>
+{% endif %}
+{% endblock content %}
