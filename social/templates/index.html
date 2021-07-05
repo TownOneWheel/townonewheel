@@ -8,6 +8,11 @@
 <a href="{% url 'social:edit' user.pk %}">수정하기</a>
 <br>
 <a href="{% url 'crud:add' %}">길냥이 등록하기</a>
+<br>
+<a href="{% url 'crud:search' %}">
+  <button type="submit">길냥이 검색하기</button>
+</a>
+<br>
 {% else %}
 <a href="{% url 'social:login' %}">로그인</a>
 <br>

@@ -1,6 +1,7 @@
 from django.db import models
+from django.db.models.fields import NullBooleanField
 from social.models import Profile
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, update_last_login
 
 
 class Cat(models.Model):
@@ -16,3 +17,8 @@ class Cat(models.Model):
 class CatImage(models.Model):
     cat = models.ForeignKey(Cat, on_delete=models.SET_NULL, related_name='image', null=True, blank=True)
     url = models.TextField(null=True, blank=True)
+
+class Comment(models.Model):
+    cat = models.ForeignKey(Cat, on_delete=models.SET_NULL, related_name='cat', null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='writer', null=True, blank=True)
+    content = models.TextField()

@@ -1,12 +1,13 @@
 from django.shortcuts import redirect, render
 from django.views.generic import View, DetailView
+from django.db.models import Q
 from config.settings import AWS_ACCESS_KEY_ID, AWS_S3_REGION_NAME, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME
 
 import boto3
 from boto3.session import Session
 from datetime import datetime
 
-from crud.models import Cat, CatImage
+from crud.models import Cat, CatImage, Comment
 
     
 class AddView(View):
@@ -50,7 +51,9 @@ class CatDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # context['cat'] = Cat.objects.filter(cat=kwargs['object'])
         context['image_lists'] = CatImage.objects.filter(cat=kwargs['object'])
+        context['comments'] = Comment.objects.filter(cat=kwargs['object'])
         return context
 
 class EditView(View):
@@ -59,7 +62,6 @@ class EditView(View):
         return render(request, 'cat_edit.html', {'cat': cat})
     
     def post(self, request, *args, **kwargs):
-        print('--')
         Cat.objects.filter(pk=kwargs['pk']).update(
             catname=request.POST['catname'],
             friendly=request.POST['friendly'],
@@ -68,5 +70,29 @@ class EditView(View):
             neutering=request.POST['neutering'],
             location=request.POST['location'],
             upload_user=request.user,
+        )
+        return redirect('crud:cat_detail', kwargs['pk'])
+
+class SearchView(View):
+    def get(self, request, *args, **kwargs):
+        keyword = request.GET.get('keyword', '')
+        search_cat = {}
+        if keyword:
+            search_cat = Cat.objects.filter(
+                Q(catname__icontains=keyword)
+            ).first()
+        return render(request, 'search.html', { 'search_cat': search_cat })
+
+class CommentView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'cat_detail.html')
+
+    def post(self, request, *args, **kwargs):
+        cat = Cat.objects.filter(pk=kwargs['pk']).first()
+        user = request.user
+        Comment.objects.create(
+            cat=cat,
+            user=user,
+            content=request.POST['content'],
         )
         return redirect('crud:cat_detail', kwargs['pk'])
