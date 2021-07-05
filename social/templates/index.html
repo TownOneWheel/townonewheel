@@ -5,6 +5,11 @@
 <a href="{% url 'social:edit' user.pk %}">수정하기</a>
 <br />
 <a href="{% url 'crud:add' %}">길냥이 등록하기</a>
+<br>
+<a href="{% url 'crud:search' %}">
+  <button type="submit">길냥이 검색하기</button>
+</a>
+<br>
 {% else %}
 <a href="{% url 'social:login' %}">로그인</a>
 <br />
@@ -15,9 +20,17 @@
 <p><em>지도를 클릭해주세요!</em></p>
 <div id="clickLatlng"></div>
 
+          
 <script
   type="text/javascript"
   src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2afb1fc4dd038efa23fc18c55f594205&libraries=services,clusterer,drawing"
 ></script>
 <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+<!-- 고양이 불러오기 -->
+{% for cat in cats %}
+{{cat.catname}}
+<a href="{% url 'crud:cat_detail' cat.pk %}">
+<img src="{{cat.image.first.url}}" alt="catimage">
+</a>
+{% endfor %}
 {% endblock content %}
