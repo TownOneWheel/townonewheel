@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% load static %} {% block content %} {% if user.is_authenticated %}
-<h1>{{user.profile.name}} 님 안녕하세요{{ position }}</h1>
+<h1>{{user.profile.name}} 님 안녕하세요</h1>
 <a href="{% url 'social:logout' %}">로그아웃</a>
 <br />
 <a href="{% url 'social:edit' user.pk %}">수정하기</a>
@@ -99,15 +99,46 @@
       image: new kakao.maps.MarkerImage(markerImageSrc, markerImageSize, markerImagePosition),
     }); //마커 생성 및 할당
 
+    kakao.maps.event.addListener(myMarker, 'click', function() {
+      // 마커 위에 인포윈도우를 표시합니다
+      infowindow.open(map, myMarker);
+    });
+
     // 인포윈도우 생성
     const infowindow = new kakao.maps.InfoWindow({
       content: `<div class="cat-register" style="padding:5px;">
-        <form method="POST" action=""><input type="text" name="position" value="${lat}"/>이곳에 고양이를 <button type="submit">등록</button></form></div>`,
+        <form action="{% url 'crud:add' %}" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+        <p>이름 : <input type="text" name="catname" placeholder="길냥이 이름"></p>
+        <p>개냥이 지수 : <input type="text" name="friendly" placeholder="사람과의 친밀도 (%)"></p>
+        <input type="file" name="img" multiple>
+        <div>성별 : <select name="gender">
+          <option value="male">수컷</option>
+          <option value="female">암컷</option>
+          <option value="dont_know">모름</option>
+        </select></div>
+        <div>색상 : <select name="color">
+          <option value="yellow">노란색</option>
+          <option value="yellow">검은색</option>
+          <option value="yellow">흰색</option>
+          <option value="yellow">주황색</option>
+          <option value="yellow">회색</option>
+        </select></div>
+        <div>중성화 여부 : <select name="neutering">
+          <option value="O">O</option>
+          <option value="X">X</option>
+          <option value="dont_know">모름</option>
+        </select></div>
+        <p>위도:<input type="text" name="location_lat" value="${lat}"/></p>
+        <p>경도:<input type="text" name="location_lon" value="${lon}"/></p>
+        <br>
+        <button type="submit">작성하기</button>
+      </form>
+    </div>`,
       removable: true, //닫기 버튼 활성화
     });
 
     // 인포윈도우를 마커위에 표시
-    infowindow.open(map, myMarker);
 
     // 클릭한 위치에 마커 생성
     kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
@@ -116,7 +147,35 @@
 
         // 마커 위치를 클릭한 위치로 옮깁니다
         myMarker.setPosition(latlng);
-        infowindow.setContent(`${latlng.getLat()}, ${latlng.getLng()}`);
+        infowindow.setContent(`<div class="cat-register" style="padding:5px;">
+        <form action="{% url 'crud:add' %}" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+        <p>이름 : <input type="text" name="catname" placeholder="길냥이 이름"></p>
+        <p>개냥이 지수 : <input type="text" name="friendly" placeholder="사람과의 친밀도 (%)"></p>
+        <input type="file" name="img" multiple>
+        <div>성별 : <select name="gender">
+          <option value="male">수컷</option>
+          <option value="female">암컷</option>
+          <option value="dont_know">모름</option>
+        </select></div>
+        <div>색상 : <select name="color">
+          <option value="yellow">노란색</option>
+          <option value="yellow">검은색</option>
+          <option value="yellow">흰색</option>
+          <option value="yellow">주황색</option>
+          <option value="yellow">회색</option>
+        </select></div>
+        <div>중성화 여부 : <select name="neutering">
+          <option value="O">O</option>
+          <option value="X">X</option>
+          <option value="dont_know">모름</option>
+        </select></div>
+        <p>위도:<input type="text" name="location_lat" value="${latlng.getLat()}"/></p>
+        <p>경도:<input type="text" name="location_lon" value="${latlng.getLng()}"/></p>
+        <br>
+        <button type="submit">작성하기</button>
+      </form>
+    </div>`);
         infowindow.open(map, myMarker);
         console.log(latlng.getLat(), latlng.getLng());
       });
