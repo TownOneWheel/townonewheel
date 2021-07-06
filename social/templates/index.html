@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% load static %} {% block content %} {% if user.is_authenticated %}
-<h1>{{user.profile.name}} 님 안녕하세요</h1>
+<h1>{{user.profile.name}} 님 안녕하세요{{ position }}</h1>
 <a href="{% url 'social:logout' %}">로그아웃</a>
 <br />
 <a href="{% url 'social:edit' user.pk %}">수정하기</a>
@@ -24,10 +24,108 @@
   type="text/javascript"
   src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2afb1fc4dd038efa23fc18c55f594205&libraries=services,clusterer,drawing"
 ></script>
-<script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+<script type="text/javascript">
+  const $mapContainer = document.getElementById('map'); //지도 div element 취득
+  const markerImageSrc = 'https://img.icons8.com/ios-glyphs/60/000000/cat.png',
+    markerImageSize = new kakao.maps.Size(40, 40),
+    markerImagePosition = { offset: new kakao.maps.Point(27, 40) };
+
+  if (navigator.geolocation) {
+    console.log('lalalalal');
+    // GeoLocation가 활성화되어있는 경우 접속 위치 취득 및 콜백함수 호출
+    navigator.geolocation.getCurrentPosition(function (position) {
+      const lat = position.coords.latitude, // 위도 취득
+        lon = position.coords.longitude; // 경도 취득
+      console.log(lat, lon);
+
+      const mapOption = {
+        center: new kakao.maps.LatLng(lat, lon), // 지도의 중심좌표
+        level: 3, // 지도의 확대 레벨
+        };
+
+      const map = new kakao.maps.Map($mapContainer, mapOption); // 지도 생성 및 할당
+
+      // 마커를 표시할 위치와 title 객체 배열입니다
+      const positions = [
+        {% for cat in cats %}
+        {
+          title: '{{ cat.catname }}',
+          latlng: new kakao.maps.LatLng({{cat.location_lat}}, {{cat.location_lon}}),
+        },
+        {% endfor %}
+        ];
+
+      for (let i = 0; i < positions.length; i++) {
+
+        // 마커 이미지를 생성합니다
+        const markerImage = new kakao.maps.MarkerImage(markerImageSrc, markerImageSize, markerImagePosition);
+
+        // 마커를 생성합니다
+        const marker = new kakao.maps.Marker({
+          map: map, // 마커를 표시할 지도
+          position: positions[i].latlng, // 마커를 표시할 위치
+          title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+          image: markerImage, // 마커 이미지
+        });
+        const catInfowindow = new kakao.maps.InfoWindow({
+          content: positions[i].title // 인포윈도우에 표시할 내용
+        });
+
+        // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
+        // 이벤트 리스너로는 클로저를 만들어 등록합니다
+        // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+        kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, catInfowindow));
+        kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(catInfowindow));
+      }
+
+      function makeOverListener(map, marker, infowindow) {
+        return function() {
+          infowindow.open(map, marker);
+        };
+      }
+      function makeOutListener(infowindow) {
+        return function() {
+          infowindow.close();
+      };
+    }
+
+    const markerPosition = new kakao.maps.LatLng(lat, lon); // geolocation으로 취득한 위치에 마커 생성
+
+    const myMarker = new kakao.maps.Marker({
+      map: map,
+      draggable: true,
+      clickable: true,
+      position: markerPosition,
+      image: new kakao.maps.MarkerImage(markerImageSrc, markerImageSize, markerImagePosition),
+    }); //마커 생성 및 할당
+
+    // 인포윈도우 생성
+    const infowindow = new kakao.maps.InfoWindow({
+      content: `<div class="cat-register" style="padding:5px;">
+        <form method="POST" action=""><input type="text" name="position" value="${lat}"/>이곳에 고양이를 <button type="submit">등록</button></form></div>`,
+      removable: true, //닫기 버튼 활성화
+    });
+
+    // 인포윈도우를 마커위에 표시
+    infowindow.open(map, myMarker);
+
+    // 클릭한 위치에 마커 생성
+    kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+      // 클릭한 위도, 경도 정보를 가져옵니다
+      const latlng = mouseEvent.latLng;
+
+        // 마커 위치를 클릭한 위치로 옮깁니다
+        myMarker.setPosition(latlng);
+        infowindow.setContent(`${latlng.getLat()}, ${latlng.getLng()}`);
+        infowindow.open(map, myMarker);
+        console.log(latlng.getLat(), latlng.getLng());
+      });
+    });
+  }
+</script>
 <!-- 고양이 불러오기 -->
 {% for cat in cats %} {{cat.catname}}
 <a href="{% url 'crud:cat_detail' cat.pk %}">
-  <img src="{{cat.image.first.url}}" alt="catimage" />
+  <img src="{{cat.image.first.url}}" alt="catimage" width="300px" />
 </a>
 {% endfor %} {% endblock content %}

@@ -12,15 +12,17 @@ class IndexTemplateView(generic.ListView):
     context_object_name = 'cats'
     queryset = Cat.objects.all()
     template_name = 'index.html'
+    object_list = Cat.objects.all()
+
+    def get(self, request):
+        context = super().get_context_data()
+        context['test'] = 'test'
+        return render(request, 'index.html', context)
 
     def post(self, request):
-        dummy_data = {
-            'name': '죠르디',
-            'type': '공룡',
-            'job': '편의점알바생',
-            'age': 5
-        }
-        return JsonResponse(dummy_data)
+        context = super().get_context_data()
+        context['position'] = request.POST['position']
+        return render(request, 'index.html', context)
 
 class SignupView(View):
     def get(self, request, *args, **kwargs) :
