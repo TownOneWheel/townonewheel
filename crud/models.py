@@ -11,6 +11,8 @@ class Cat(models.Model):
     neutering = models.CharField(max_length=10, null=True, blank=True)
     friendly = models.CharField(max_length=64, default='0')
     location = models.TextField()
+    location_lat = models.FloatField(default=37.54490018658278)
+    location_lon = models.FloatField(default=127.05685028171477)
     upload_user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='upload', null=True, blank=True)
     # cat_like = models.TextField()
 

@@ -21,7 +21,9 @@ class AddView(View):
             gender=request.POST['gender'],
             color=request.POST['color'],
             neutering=request.POST['neutering'],
-            location=request.POST['location'],
+            # location=request.POST['location'],
+            location_lat=request.POST['location_lat'],
+            location_lon=request.POST['location_lon'],
             upload_user=request.user,
             )
         files = request.FILES.getlist('img')
