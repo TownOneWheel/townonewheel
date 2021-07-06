@@ -10,4 +10,17 @@
 <br>
 <a href="{% url 'crud:cat_edit' cat.pk %}">고양이 정보 수정하기</a>
 {% endif %}
+<br>
+<br>
+<a href="">{{cat.upload_user}}</a>
+<form action="{% url 'crud:comment' cat.pk%}" method="POST">
+  {% csrf_token %}
+  <input type="text" name='content'>
+  <button type="submit">댓글 작성하기</button>
+</form>
+{% for comment in comments %}
+<div>작성자 : {{comment.user}}</div>
+<div>댓글 : {{comment.content}}</div>
+<br>
+{% endfor %}
 {% endblock content %}
