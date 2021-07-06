@@ -1,13 +1,17 @@
 from django.shortcuts import redirect, render
 from django.views.generic import View, DetailView
 from django.db.models import Q
+from decimal import Decimal
 from config.settings import AWS_ACCESS_KEY_ID, AWS_S3_REGION_NAME, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME
 
 import boto3
 from boto3.session import Session
 from datetime import datetime
+import glob, os
 
 from crud.models import Cat, CatImage, Comment
+
+
 
     
 class AddView(View):
@@ -15,17 +19,45 @@ class AddView(View):
         return render(request, 'add.html')
     
     def post(self, request, *args, **kwargs):
+        catname=request.POST['catname']
+        friendly=request.POST['friendly']
+        gender=request.POST['gender']
+        color=request.POST['color']
+        neutering=request.POST['neutering']
+        location_lat=request.POST['location_lat']
+        location_lon=request.POST['location_lon']
+        upload_user=request.user
+        cat_locations = '{0:0.3f}'.format(float(location_lat)) + '{0:0.3f}'.format(float(location_lon))
+        path =  './crud/cat_location/*'
+        location_file_lists = glob.glob(path)
+        location_file_names = []
+        for location_file_list in location_file_lists:
+            file_path = os.path.splitext(location_file_list)[0]
+            location_file_names.append(file_path.split('/')[-1])
+        if cat_locations in location_file_names:
+            with open('./crud/cat_location/{}.txt'.format(cat_locations), 'r') as f:
+                cat_list = f.readlines()
+            cat_pk_list = cat_list[0].split(',')[:-1]
+            cat_lists = []
+            for cat_pk in cat_pk_list:
+                cat = Cat.objects.filter(pk=int(cat_pk)).first()
+                cat_lists.append(cat) 
+            return render(request, 'overlap.html', {'cat_lists': cat_lists})
         cat = Cat.objects.create(
-            catname=request.POST['catname'],
-            friendly=request.POST['friendly'],
-            gender=request.POST['gender'],
-            color=request.POST['color'],
-            neutering=request.POST['neutering'],
-            # location=request.POST['location'],
-            location_lat=request.POST['location_lat'],
-            location_lon=request.POST['location_lon'],
-            upload_user=request.user,
+            catname=catname,
+            friendly=friendly,
+            gender=gender,
+            color=color,
+            neutering=neutering,
+            location_lat=location_lat,
+            location_lon=location_lon,
+            upload_user=upload_user,
             )
+        cat_check = [str(cat.pk)]
+        with open('./crud/cat_location/{}.txt'.format(cat_locations), 'a') as f:
+            for data in cat_check:
+                f.write(data)
+                f.write(',')
         files = request.FILES.getlist('img')
         session = Session(
             aws_access_key_id=AWS_ACCESS_KEY_ID,
@@ -98,3 +130,8 @@ class CommentView(View):
             content=request.POST['content'],
         )
         return redirect('crud:cat_detail', kwargs['pk'])
+
+
+
+
+    

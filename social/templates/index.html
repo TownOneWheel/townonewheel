@@ -188,6 +188,7 @@
   }
 </script>
 <!-- 고양이 불러오기 -->
+{{context.error}}
 {% for cat in cats %} {{cat.catname}}
 <a href="{% url 'crud:cat_detail' cat.pk %}">
   <img src="{{cat.image.first.url}}" alt="catimage" width="300px" />
