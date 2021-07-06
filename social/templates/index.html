@@ -129,8 +129,8 @@
           <option value="X">X</option>
           <option value="dont_know">모름</option>
         </select></div>
-        <p>위도:<input type="text" name="location_lat" value="${lat}"/></p>
-        <p>경도:<input type="text" name="location_lon" value="${lon}"/></p>
+        <input type="hidden" name="location_lat" value="${lat}"/>
+        <input type="hidden" name="location_lon" value="${lon}"/>
         <br>
         <button type="submit">작성하기</button>
       </form>
@@ -143,6 +143,8 @@
     // 클릭한 위치에 마커 생성
     kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
       // 클릭한 위도, 경도 정보를 가져옵니다
+      infowindow.close(map, myMarker);
+
       const latlng = mouseEvent.latLng;
 
         // 마커 위치를 클릭한 위치로 옮깁니다
@@ -170,13 +172,16 @@
           <option value="X">X</option>
           <option value="dont_know">모름</option>
         </select></div>
-        <p>위도:<input type="text" name="location_lat" value="${latlng.getLat()}"/></p>
-        <p>경도:<input type="text" name="location_lon" value="${latlng.getLng()}"/></p>
+        <input type="hidden" name="location_lat" value="${latlng.getLat()}"/>
+        <input type="hidden" name="location_lon" value="${latlng.getLng()}"/>
         <br>
         <button type="submit">작성하기</button>
       </form>
     </div>`);
+      kakao.maps.event.addListener(myMarker, 'click', function() {
+      // 마커 위에 인포윈도우를 표시합니다
         infowindow.open(map, myMarker);
+      });
         console.log(latlng.getLat(), latlng.getLng());
       });
     });
