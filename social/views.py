@@ -110,3 +110,7 @@ class DetailView(generic.DeleteView):
     model = User
     context_object_name = 'user'
     template_name = 'detail.html'
+
+
+    
+    

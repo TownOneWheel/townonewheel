@@ -2,6 +2,9 @@
 {% block content %}
 <!--프로필 사진 -->
 <h3>{{user.profile.name}}</h3>
+<p>{{user.profile.introduction}}</p>
+<a href="{% url 'social:edit' user.pk %}">수정하기</a>
+
 <div>팔로워 {{user.relationship.followers.all.count}}</div>
 <div>팔로우 {{user.following.all.count}}</div>
 {% if request.user != user %}
@@ -14,5 +17,8 @@
     {% endif %}
 </form>
 {% endif %}
+{% for cat in user.upload.all %}
+{{cat.catname}}
+{% endfor %}
 
 {% endblock content %}

@@ -23,7 +23,7 @@ class LoginDto() :
 @dataclass
 class UpdateDto() :
     name: str
-    introduction : str
+    introduction: str
     email: str
     pk : str
 
