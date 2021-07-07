@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form action="{% url 'social:edit' user.pk %}" method="POST" >
+<form action="{% url 'social:edit' user.profile.pk %}" method="POST" >
     {% csrf_token %}
-    <input type='text' placeholder="이름" value={{user.profile.name}} name="name"  />
+    <input type='text' placeholder="이름" value={{user.profile.name}} name="name"/>
     <br/><br/>
-    <textarea name="introduction">{{user.profile.introduction}}</textarea>
+    <textarea placeholder="자기소개" name="introduction">{{user.profile.introduction}}</textarea>
     <br/><br/>
     <input type="email" placeholder="이메일" value={{user.profile.email}} name="email">
     <br><br>

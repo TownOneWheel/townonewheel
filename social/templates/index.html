@@ -1,9 +1,13 @@
 {% extends "base.html" %} {% load static %} {% block content %} {% if user.is_authenticated %}
 <h1>{{user.profile.name}} 님 안녕하세요</h1>
 <a href="{% url 'social:logout' %}">로그아웃</a>
-<br />
-<a href="{% url 'social:edit' user.pk %}">수정하기</a>
-<br />
+
+<a href="{% url 'social:detail' user.pk %}">내정보</a>
+<br>
+<a onclick="return confirm('정말 탈퇴하시겠습니까 ?')" href="{% url 'social:delete' user.pk %}">탈퇴하기</a>
+<br>
+
+
 <a href="{% url 'crud:add' %}">길냥이 등록하기</a>
 <br />
 <a href="{% url 'crud:search' %}">

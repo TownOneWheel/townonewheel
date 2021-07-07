@@ -1,10 +1,12 @@
+from social.models import Relationship
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import generic
 from django.views import View
 from django.contrib import auth
+from django.contrib.auth.models import User
 
-from social.services import UserService, SignupDto, LoginDto, UpdateDto
+from social.services import UserService, SignupDto, LoginDto, UpdateDto, RelationShipDto, RelationShipService
 from crud.models import Cat, CatImage
 
 class IndexTemplateView(generic.ListView):
@@ -93,3 +95,33 @@ class EditView(View) :
             introduction=post_data['introduction'],
             pk=self.kwargs['pk']
         )
+    
+def delete(request, user_pk):
+    user = User.objects.filter(pk=user_pk)
+
+    user.update(is_active=False)
+    auth.logout(request)
+
+    return redirect('index')
+
+class RelationShipView(View):
+    def post(self, request, *args, **kwargs):
+        relationship_dto = self._build_relationship_dto(request)
+        result = RelationShipService.toggle(relationship_dto)
+
+        return redirect('social:detail', kwargs['pk'])
+    
+    def _build_relationship_dto(self, request):
+        return RelationShipDto(
+            user_pk=self.kwargs['pk'],
+            requester=request.user
+        )
+
+class DetailView(generic.DeleteView):
+    model = User
+    context_object_name = 'user'
+    template_name = 'detail.html'
+
+
+    
+    
