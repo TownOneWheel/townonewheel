@@ -108,8 +108,6 @@ class CatRelationShipService():
     @staticmethod
     def toggle(dto: CatRelationShipDto):
         cat = Cat.objects.filter(pk=dto.cat_pk).first()
-        print(dto.requester)
-        print(cat)
         relationship = Relationship.objects.filter(user=dto.requester).first()
         if (relationship is None):
             relationship = Relationship.objects.create(user=dto.requester)
