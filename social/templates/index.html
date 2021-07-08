@@ -62,34 +62,7 @@
     markerImageSize = new kakao.maps.Size(40, 40),
     markerImagePosition = { offset: new kakao.maps.Point(27, 40) };
   function generateAddMarker(lat, lon){
-    return `<div class="cat-register">
-        <form class="cat-form" action="{% url 'crud:add' %}" method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-        <label>이름: <input type="text" name="catname" placeholder="길냥이 이름"/></label>
-        <label>개냥이 지수: <input type="text" name="friendly" placeholder="사람과의 친밀도 (%)"/></label>
-        <label class="file-input">사진: <span>업로드</span><input hidden type="file" name="img" multiple /></label>
-        <label>성별: <select name="gender">
-          <option value="male">수컷</option>
-          <option value="female">암컷</option>
-          <option value="dont_know">모름</option>
-        </select></label>
-        <label>색상: <select name="color">
-          <option value="yellow">노란색</option>
-          <option value="yellow">검은색</option>
-          <option value="yellow">흰색</option>
-          <option value="yellow">주황색</option>
-          <option value="yellow">회색</option>
-        </select></label>
-        <label>중성화: <select name="neutering">
-          <option value="O">O</option>
-          <option value="X">X</option>
-          <option value="dont_know">모름</option>
-        </select></label>
-        <input type="hidden" name="location_lat" value="${lat}"/>
-        <input type="hidden" name="location_lon" value="${lon}"/>
-        <button type="submit">등록</button>
-      </form>
-    </div>`
+    return `<div>내 위치</div>`
   }
   if (navigator.geolocation) {
     console.log('lalalalal');
@@ -172,12 +145,11 @@
       draggable: true,
       clickable: true,
       position: markerPosition,
-      image: new kakao.maps.MarkerImage(markerImageSrc, markerImageSize, markerImagePosition),
     }); //마커 생성 및 할당
     const catMsg = new kakao.maps.CustomOverlay({
       map: map,
       position: markerPosition,
-      content: '<div class="overlay">이 위치에 등록하려면 클릭하세요</div>',
+      content: '<div class="overlay">나</div>',
       yAnchor: 0
     });
     kakao.maps.event.addListener(myMarker, 'click', function() {
@@ -192,31 +164,7 @@
       removable: true, //닫기 버튼 활성화
     });
 
-    // 클릭한 위치에 마커 생성
-    kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
-      // 클릭한 위도, 경도 정보를 가져옵니다
-      const latlng = mouseEvent.latLng;
-      // 마커 위치를 클릭한 위치로 옮깁니다
-      myMarker.setPosition(latlng);
-      infowindow.close(map, myMarker);
-
-      catMsg.setMap(null);
-      catMsg.setPosition(new kakao.maps.LatLng(latlng.getLat(), latlng.getLng()))
-      catMsg.setMap(map)
-
-      kakao.maps.event.addListener(myMarker, 'click', function() {
-      // 마커 위에 인포윈도우를 표시합니다
-        infowindow.setContent(generateAddMarker(latlng.getLat(), latlng.getLng()));
-        infowindow.open(map, myMarker);
-      });
-        console.log(latlng.getLat(), latlng.getLng());
-      });
     });
   }
 </script>
-<!-- 고양이 불러오기 -->
-{{context.error}} {% for cat in cats %} {{cat.catname}}
-<a href="{% url 'crud:cat_detail' cat.pk %}">
-  <img src="{{cat.image.first.url}}" alt="catimage" width="300px" />
-</a>
-{% endfor %} {% endblock content %}
+{% endblock content %}
