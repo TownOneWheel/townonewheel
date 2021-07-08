@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+{% for cat in user.relationship.favorite_cat.all %}
+<a href="{% url 'crud:cat_detail' cat.pk %}">{{cat.catname}}</a>
+<br>
+{% endfor %}
+{% endblock content %}

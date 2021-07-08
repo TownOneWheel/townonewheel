@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from crud.models import Cat
 # Create your models here.
 
 class Profile(models.Model):
@@ -17,5 +18,5 @@ class Profile(models.Model):
         
 class Relationship(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='relationship', null=True, blank=True)
-    # favorite_cats = models.ManyToManyField(Cat, related_name='relationship')
     followers = models.ManyToManyField(User, related_name='following', blank=True)
+    favorite_cat = models.ManyToManyField(Cat, related_name='catrelationship', blank=True)

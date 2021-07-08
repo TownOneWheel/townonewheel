@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password
 from dataclasses import dataclass
 from .models import Profile, Relationship
+from crud.models import Cat
 
 @dataclass
 class SignupDto():
@@ -30,6 +31,11 @@ class UpdateDto() :
 @dataclass
 class RelationShipDto():
     user_pk: str
+    requester: User
+
+@dataclass
+class CatRelationShipDto():
+    cat_pk: str
     requester: User
 
 ERROR_MSG = {
@@ -97,3 +103,18 @@ class RelationShipService():
             return { 'error' : { 'state': False }, 'data' : 'unfollowed' }
         relationship.followers.add(dto.requester)
         return { 'error' : { 'state': False }, 'data' : 'followed' }
+
+class CatRelationShipService():
+    @staticmethod
+    def toggle(dto: CatRelationShipDto):
+        cat = Cat.objects.filter(pk=dto.cat_pk).first()
+        print(dto.requester)
+        print(cat)
+        relationship = Relationship.objects.filter(user=dto.requester).first()
+        if (relationship is None):
+            relationship = Relationship.objects.create(user=dto.requester)
+        if (cat in relationship.favorite_cat.all()):
+            relationship.favorite_cat.remove(cat)
+            return { 'error' : { 'state': False } }
+        relationship.favorite_cat.add(cat)
+        return { 'error' : { 'state': False } }

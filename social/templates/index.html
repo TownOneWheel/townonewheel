@@ -5,11 +5,13 @@
 <a href="{% url 'social:detail' user.pk %}">내정보</a>
 <br>
 <a onclick="return confirm('정말 탈퇴하시겠습니까 ?')" href="{% url 'social:delete' user.pk %}">탈퇴하기</a>
+<a href="{% url 'social:favorite' user.pk %}">즐겨찾기</a>
 <br>
 
 
 <a href="{% url 'crud:add' %}">길냥이 등록하기</a>
 <br />
+
 <a href="{% url 'crud:search' %}">
   <button type="submit">길냥이 검색하기</button>
 </a>
