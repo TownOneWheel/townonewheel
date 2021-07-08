@@ -6,8 +6,12 @@ from django.views import View
 from django.contrib import auth
 from django.contrib.auth.models import User
 
-from social.services import UserService, SignupDto, LoginDto, UpdateDto, RelationShipDto, RelationShipService
+from social.services import UserService, SignupDto, LoginDto, UpdateDto, RelationShipDto, RelationShipService, CatRelationShipService, CatRelationShipDto
+
 from crud.models import Cat, CatImage
+from config.settings import AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_S3_REGION_NAME,AWS_STORAGE_BUCKET_NAME
+from boto3.session import Session
+from datetime import datetime
 
 class IndexTemplateView(generic.ListView):
     model = Cat
@@ -33,7 +37,7 @@ class SignupView(View):
     def post(self, request, *args, **kwargs):
         signup_dto = self._build_signup_dto(request.POST)
         result = UserService.signup(signup_dto)
-
+        
         if(result['error']['state']):
             context = {'error': result['error']}
             return render(request, 'signup.html', context)
@@ -44,6 +48,7 @@ class SignupView(View):
     def _build_signup_dto(post_data) :
         return SignupDto(
             userid=post_data['userid'],
+            profile_img_url=post_data['image'],
             password=post_data['password'],
             password_check=post_data['password_check'],
             introduction=post_data['introduction'],
@@ -117,11 +122,25 @@ class RelationShipView(View):
             requester=request.user
         )
 
-class DetailView(generic.DeleteView):
+class DetailView(generic.DetailView):
     model = User
     context_object_name = 'user'
     template_name = 'detail.html'
 
+class CatRelationShipView(View):
+    def post(self, request, *args, **kwargs):
+        catrelationship_dto = self._build_catrelationship_dto(request)
+        result = CatRelationShipService.toggle(catrelationship_dto)
 
+        return redirect('crud:cat_detail', kwargs['pk'])
     
-    
+    def _build_catrelationship_dto(self, request):
+        return CatRelationShipDto(
+            cat_pk=self.kwargs['pk'],
+            requester=request.user
+        )
+
+class FavoriteView(generic.DetailView):
+    model = User
+    context_object_name = 'user'
+    template_name = 'favorite.html'

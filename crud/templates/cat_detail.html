@@ -1,26 +1,29 @@
-{% extends "base.html" %}
-
-{% block content %}
-{{cat.catname}}
-<br>
+{% extends "base.html" %} {% load static %}{% block head %}
+<link rel="stylesheet" href="{% static 'css/cat_detail.css' %}" />
+{% endblock head %} {% block content %} {{cat.catname}}
+<form action="{% url 'social:catrelationship' cat.pk %}" method="POST">
+  {% csrf_token %} {% if cat in user.relationship.favorite_cat.all %}
+  <button type="submit">즐겨찾기 취소</button>
+  {% else %}
+  <button type="submit">즐겨찾기</button>
+  {% endif %}
+</form>
+<br />
 {% for image_list in image_lists %}
-<img src="{{image_list.url}}" alt="catimage" style="height: 200px; width: 200px;">
-{% endfor %}
-{% if cat.upload_user == user %}
-<br>
+<img src="{{image_list.url}}" alt="catimage" style="height: 200px; width: 200px" />
+{% endfor %} {% if cat.upload_user == user %}
+<br />
 <a href="{% url 'crud:cat_edit' cat.pk %}">고양이 정보 수정하기</a>
 {% endif %}
-<br>
-<br>
-<a href="">{{cat.upload_user}}</a>
+
+<a href="{% url 'social:detail' cat.upload_user.pk %}">{{cat.upload_user}}</a>
 <form action="{% url 'crud:comment' cat.pk%}" method="POST">
   {% csrf_token %}
-  <input type="text" name='content'>
+  <input type="text" name="content" />
   <button type="submit">댓글 작성하기</button>
 </form>
 {% for comment in comments %}
 <div>작성자 : {{comment.user}}</div>
 <div>댓글 : {{comment.content}}</div>
-<br>
-{% endfor %}
-{% endblock content %}
+<br />
+{% endfor %} {% endblock content %}

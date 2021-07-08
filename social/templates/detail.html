@@ -3,8 +3,9 @@
 <!--프로필 사진 -->
 <h3>{{user.profile.name}}</h3>
 <p>{{user.profile.introduction}}</p>
+{% if request.user == user %}
 <a href="{% url 'social:edit' user.pk %}">수정하기</a>
-
+{% endif %}
 <div>팔로워 {{user.relationship.followers.all.count}}</div>
 <div>팔로우 {{user.following.all.count}}</div>
 {% if request.user != user %}
