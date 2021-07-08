@@ -134,5 +134,3 @@ class CatRelationShipService():
             return { 'error' : { 'state': False } }
         relationship.favorite_cat.add(cat)
         return { 'error' : { 'state': False } }
-
-
