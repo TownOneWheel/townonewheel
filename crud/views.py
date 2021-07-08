@@ -16,7 +16,7 @@ from crud.models import Cat, CatImage, Comment
     
 class AddView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'add.html')
+        return redirect('index')
     
     def post(self, request, *args, **kwargs):
         catname=request.POST['catname']
@@ -27,6 +27,7 @@ class AddView(View):
         location_lat=request.POST['location_lat']
         location_lon=request.POST['location_lon']
         upload_user=request.user
+        image = request.FILES.getlist('img')
         cat_locations = '{0:0.3f}'.format(float(location_lat)) + '{0:0.3f}'.format(float(location_lon))
         path =  './crud/cat_location/*'
         location_file_lists = glob.glob(path)
@@ -41,8 +42,19 @@ class AddView(View):
             cat_lists = []
             for cat_pk in cat_pk_list:
                 cat = Cat.objects.filter(pk=int(cat_pk)).first()
-                cat_lists.append(cat) 
-            return render(request, 'overlap.html', {'cat_lists': cat_lists})
+                cat_lists.append(cat)
+            return render(request, 'overlap.html', {
+                'cat_lists': cat_lists,
+                'catname': catname,
+                'friendly': friendly,
+                'gender': gender,
+                'color': color,
+                'neutering': neutering,
+                'location_lat': location_lat,
+                'location_lon': location_lon,
+                'upload_user': upload_user,
+                'image': image,
+            })
         cat = Cat.objects.create(
             catname=catname,
             friendly=friendly,
@@ -53,11 +65,6 @@ class AddView(View):
             location_lon=location_lon,
             upload_user=upload_user,
             )
-        cat_check = [str(cat.pk)]
-        with open('./crud/cat_location/{}.txt'.format(cat_locations), 'a') as f:
-            for data in cat_check:
-                f.write(data)
-                f.write(',')
         files = request.FILES.getlist('img')
         session = Session(
             aws_access_key_id=AWS_ACCESS_KEY_ID,
@@ -76,6 +83,56 @@ class AddView(View):
                 cat=cat,
                 url=s3_url+now+file.name,
             ) 
+        with open('./crud/cat_location/{}.txt'.format(cat_locations), 'a') as f:
+            f.write(str(cat.pk))
+            f.write(',')
+        return redirect('index')
+
+class CheckedView(View):
+    def get(self, request, *args, **kwargs):
+        return redirect('index')
+
+    def post(self, request, *args, **kwargs):
+        catname=request.POST['catname']
+        friendly=request.POST['friendly']
+        gender=request.POST['gender']
+        color=request.POST['color']
+        neutering=request.POST['neutering']
+        location_lat=request.POST['location_lat']
+        location_lon=request.POST['location_lon']
+        upload_user=request.user
+        cat_locations = '{0:0.3f}'.format(float(location_lat)) + '{0:0.3f}'.format(float(location_lon))
+        cat = Cat.objects.create(
+            catname=catname,
+            friendly=friendly,
+            gender=gender,
+            color=color,
+            neutering=neutering,
+            location_lat=location_lat,
+            location_lon=location_lon,
+            upload_user=upload_user,
+            )
+        files = request.FILES.getlist('img')
+        session = Session(
+            aws_access_key_id=AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+            region_name=AWS_S3_REGION_NAME,
+        )
+        s3 = session.resource('s3')
+        now = datetime.now().strftime('%Y%H%M%S')
+        s3_url="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/"
+        for file in files:
+            s3.Bucket(AWS_STORAGE_BUCKET_NAME).put_object(
+                Key=now+file.name,
+                Body=file
+            )
+            CatImage.objects.create(
+                cat=cat,
+                url=s3_url+now+file.name,
+            ) 
+        with open('./crud/cat_location/{}.txt'.format(cat_locations), 'a') as f:
+            f.write(str(cat.pk))
+            f.write(',')
         return redirect('index')
 
 class CatDetailView(DetailView):
