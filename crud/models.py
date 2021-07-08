@@ -1,6 +1,5 @@
 from django.db import models
 from django.db.models.fields import NullBooleanField
-from social.models import Profile
 from django.contrib.auth.models import User, update_last_login
 
 
