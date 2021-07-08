@@ -16,7 +16,7 @@ from crud.models import Cat, CatImage, Comment
     
 class AddView(View):
     def get(self, request, *args, **kwargs):
-        return redirect('index')
+        return render(request, 'cat_add.html')
     
     def post(self, request, *args, **kwargs):
         catname=request.POST['catname']
