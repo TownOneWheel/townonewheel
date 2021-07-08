@@ -21,4 +21,3 @@ class Relationship(models.Model):
     followers = models.ManyToManyField(User, related_name='following', blank=True)
     favorite_cat = models.ManyToManyField(Cat, related_name='catrelationship', blank=True)
 
-

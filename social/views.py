@@ -145,4 +145,3 @@ class FavoriteView(generic.DetailView):
     context_object_name = 'user'
     template_name = 'favorite.html'
 
-    
