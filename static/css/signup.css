@@ -1,0 +1,28 @@
+.wrapper{
+  position: relative;
+  text-align: center;
+  padding: 80px;
+}
+.signupForm{
+ 
+}
+.box{
+  display: block;
+  width: 100%;
+  height: 51px;
+  border: solid 1px #dadada;
+  padding: 10px 14px 10px 14px;
+  box-sizing: border-box;
+  background: #fff;
+  margin-top: 30px;
+}
+
+.int{
+  display: block;
+  position:relative;
+  width: 100%;
+  height: 29px;
+  border: none;
+  background: #fff;
+  font-size: 15px;
+}
