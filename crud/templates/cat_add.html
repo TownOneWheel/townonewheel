@@ -1,0 +1,106 @@
+{% extends "base.html" %} {% block head %}
+<script
+  type="text/javascript"
+  src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2afb1fc4dd038efa23fc18c55f594205&libraries=services,clusterer,drawing"
+></script>
+{% endblock head %} {% block content %}
+<div class="cat-register">
+  <form class="cat-form" action="{% url 'crud:add' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label>이름: <input type="text" name="catname" placeholder="길냥이 이름" /></label>
+    <label
+      >개냥이 지수: <input type="text" name="friendly" placeholder="사람과의 친밀도 (%)"
+    /></label>
+    <label class="file-input"
+      >사진: <span>업로드</span><input hidden type="file" name="img" multiple
+    /></label>
+    <label
+      >성별:
+      <select name="gender">
+        <option value="male">수컷</option>
+        <option value="female">암컷</option>
+        <option value="dont_know">모름</option>
+      </select></label
+    >
+    <label
+      >색상:
+      <select name="color">
+        <option value="yellow">노란색</option>
+        <option value="yellow">검은색</option>
+        <option value="yellow">흰색</option>
+        <option value="yellow">주황색</option>
+        <option value="yellow">회색</option>
+      </select></label
+    >
+    <label
+      >중성화:
+      <select name="neutering">
+        <option value="O">O</option>
+        <option value="X">X</option>
+        <option value="dont_know">모름</option>
+      </select></label
+    >
+    <input class="location-lat" type="hidden" name="location_lat" value="null" />
+    <input class="location-lon" type="hidden" name="location_lon" value="null" />
+    <button type="submit">등록</button>
+  </form>
+</div>
+<div id="map" style="width: 100%; height: 50vh"></div>
+<script type="text/javascript">
+  const $mapContainer = document.getElementById('map'); //지도 div element 취득
+  const markerImageSrc = 'https://img.icons8.com/ios-glyphs/60/000000/cat.png',
+    markerImageSize = new kakao.maps.Size(40, 40),
+    markerImagePosition = { offset: new kakao.maps.Point(27, 40) };
+  const $lat_input = document.querySelector('.location-lat'),
+    $lon_input = document.querySelector('.location-lon');
+
+  if (navigator.geolocation) {
+    // GeoLocation가 활성화되어있는 경우 접속 위치 취득 및 콜백함수 호출
+    navigator.geolocation.getCurrentPosition(function (position) {
+      const lat = position.coords.latitude, // 위도 취득
+        lon = position.coords.longitude; // 경도 취득
+
+      console.log(lat, lon);
+      const mapOption = {
+        center: new kakao.maps.LatLng(lat, lon), // 지도의 중심좌표
+        level: 3, // 지도의 확대 레벨
+      };
+      const map = new kakao.maps.Map($mapContainer, mapOption); // 지도 생성 및 할당
+      const markerPosition = new kakao.maps.LatLng(lat, lon); // geolocation으로 취득한 위치에 마커 생성
+
+      const myMarker = new kakao.maps.Marker({
+        map: map,
+        draggable: true,
+        clickable: true,
+        position: markerPosition,
+        image: new kakao.maps.MarkerImage(markerImageSrc, markerImageSize, markerImagePosition),
+      }); //마커 생성 및 할당
+      const catMsg = new kakao.maps.CustomOverlay({
+        map: map,
+        position: markerPosition,
+        content: '<div class="overlay">고양이가 여기에 있나요?</div>',
+        yAnchor: 0,
+      });
+      kakao.maps.event.addListener(myMarker, 'click', function () {
+        console.log('마커클릭시 발생하는 이벤트');
+      });
+      $lat_input.value = lat;
+      $lon_input.value = lon;
+      // 클릭한 위치에 마커 생성
+      kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+        // 클릭한 위도, 경도 정보를 가져옵니다
+        const latlng = mouseEvent.latLng;
+        // 마커 위치를 클릭한 위치로 옮깁니다
+        myMarker.setPosition(latlng);
+        catMsg.setMap(null);
+        catMsg.setPosition(new kakao.maps.LatLng(latlng.getLat(), latlng.getLng()));
+        catMsg.setMap(map);
+        $lat_input.value = latlng.getLat();
+        $lon_input.value = latlng.getLng();
+        console.log(latlng.getLat(), latlng.getLng());
+      });
+    });
+  }
+</script>
+
+{% endblock content %}

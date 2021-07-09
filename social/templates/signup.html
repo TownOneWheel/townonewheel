@@ -4,8 +4,9 @@
 {% if error.state %}
 <h2>{{error.msg}}</h2>
 {% endif %}
-<form action="{% url 'social:signup' %}" method="POST" >
+<form action="{% url 'social:signup' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
+    <input type="file" name='image' >
     <input type="text" placeholder="아이디" name="userid" />
     <input type="password" placeholder="비밀번호" name="password" />
     <input type="password" placeholder="비밀번호 확인" name="password_check" />

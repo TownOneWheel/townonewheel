@@ -1,0 +1,27 @@
+@import url('http://fonts.cdnfonts.com/css/segoe-ui-4');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+body * {
+  font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
+  /* box-sizing: border-box; */
+}
+
+body {
+  margin: 0;
+}
+.reset-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+.content {
+  background-color: #eeeeee;
+}
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+a {
+  text-decoration: none;
+}

@@ -35,7 +35,7 @@ class SignupView(View):
         return render(request, 'signup.html')
 
     def post(self, request, *args, **kwargs):
-        signup_dto = self._build_signup_dto(request.POST)
+        signup_dto = self._build_signup_dto(request)
         result = UserService.signup(signup_dto)
         
         if(result['error']['state']):
@@ -45,15 +45,15 @@ class SignupView(View):
         return redirect('index')
         
     @staticmethod
-    def _build_signup_dto(post_data) :
+    def _build_signup_dto(request) :
         return SignupDto(
-            userid=post_data['userid'],
-            profile_img_url=post_data['image'],
-            password=post_data['password'],
-            password_check=post_data['password_check'],
-            introduction=post_data['introduction'],
-            name=post_data['name'],
-            email=post_data['email'],
+            userid=request.POST['userid'],
+            profile_img_url=request.FILES['image'],
+            password=request.POST['password'],
+            password_check=request.POST['password_check'],
+            introduction=request.POST['introduction'],
+            name=request.POST['name'],
+            email=request.POST['email'],
         )
 
 class LoginView(View) :
@@ -145,4 +145,3 @@ class FavoriteView(generic.DetailView):
     context_object_name = 'user'
     template_name = 'favorite.html'
 
-    
