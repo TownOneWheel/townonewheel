@@ -15,6 +15,9 @@
         <a class="nav-link" href="{% url 'social:detail' user.pk %}">내정보</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="{% url 'crud:add' %}">길냥이 등록하기</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="{% url 'crud:search' %}">길냥이 검색하기</a>
       </li>
       <li class="nav-item">
@@ -41,53 +44,27 @@
   {% endif %}
 </header>
 <div id="map" style="width: 100%; height: 60vh"></div>
-<!-- 고양이 목록 -->
-<div class="cats-div">
-  <h2>등록된 길냥이 목록</h2>
-  {% for cat in cats %}
-  <article class="cat-article">
-    <h3>{{cat.catname}}</h3>
-    <a href="{% url 'crud:cat_detail' cat.pk %}">
-      <img src="{{cat.image.first.url}}" alt="catimage" width="100px" />
-    </a>
-  </article>
-  {% endfor %}
-</div>
 <script type="text/javascript">
   const $mapContainer = document.getElementById('map'); //지도 div element 취득
   const markerImageSrc = 'https://img.icons8.com/ios-glyphs/60/000000/cat.png',
     markerImageSize = new kakao.maps.Size(40, 40),
     markerImagePosition = { offset: new kakao.maps.Point(27, 40) };
-  function generateAddMarker(lat, lon){
-    return `<div class="cat-register">
-        <form class="cat-form" action="{% url 'crud:add' %}" method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-        <label>이름: <input type="text" name="catname" placeholder="길냥이 이름"/></label>
-        <label>개냥이 지수: <input type="text" name="friendly" placeholder="사람과의 친밀도 (%)"/></label>
-        <label class="file-input">사진: <span>업로드</span><input hidden type="file" name="img" multiple /></label>
-        <label>성별: <select name="gender">
-          <option value="male">수컷</option>
-          <option value="female">암컷</option>
-          <option value="dont_know">모름</option>
-        </select></label>
-        <label>색상: <select name="color">
-          <option value="yellow">노란색</option>
-          <option value="yellow">검은색</option>
-          <option value="yellow">흰색</option>
-          <option value="yellow">주황색</option>
-          <option value="yellow">회색</option>
-        </select></label>
-        <label>중성화: <select name="neutering">
-          <option value="O">O</option>
-          <option value="X">X</option>
-          <option value="dont_know">모름</option>
-        </select></label>
-        <input type="hidden" name="location_lat" value="${lat}"/>
-        <input type="hidden" name="location_lon" value="${lon}"/>
-        <button type="submit">등록</button>
-      </form>
-    </div>`
-  }
+  const positions = [
+      {% for cat in cats %}
+      {
+        title: '{{ cat.catname }}',
+        content: `<div class="cat-info" style="width: 100px; height: 100px; background-color: yellow; overflow: auto;"><img src="{{cat.image.first.url}}" alt="catimage" class="cat-profile-img"/>
+          <h2>{{ cat.catname }}</h2>
+          <ul class="reset-list cat-info-list">
+          <li>성별: {{ cat.gender }}</li>
+          <li>색깔: {{ cat.color }}</li>
+          <li>개냥지수: {{ cat.friendly }}</li>
+          </ul></div>`,
+        latlng: new kakao.maps.LatLng({{cat.location_lat}}, {{cat.location_lon}}),
+        pk: {{ cat.pk }},
+      },
+      {% endfor %}
+      ];
   if (navigator.geolocation) {
     console.log('lalalalal');
     // GeoLocation가 활성화되어있는 경우 접속 위치 취득 및 콜백함수 호출
@@ -103,23 +80,6 @@
 
       const map = new kakao.maps.Map($mapContainer, mapOption); // 지도 생성 및 할당
 
-      // 마커를 표시할 위치와 title 객체 배열입니다
-      const positions = [
-        {% for cat in cats %}
-        {
-          title: '{{ cat.catname }}',
-          content: `<div class="cat-info"><img src="{{cat.image.first.url}}" alt="catimage" class="cat-profile-img"/>
-            <h2>{{ cat.catname }}</h2>
-            <ul class="reset-list cat-info-list">
-            <li>성별: {{ cat.gender }}</li>
-            <li>색깔: {{ cat.color }}</li>
-            <li>개냥지수: {{ cat.friendly }}</li>
-            </ul></div>`,
-          latlng: new kakao.maps.LatLng({{cat.location_lat}}, {{cat.location_lon}}),
-          pk: {{ cat.pk }},
-        },
-        {% endfor %}
-        ];
 
       for (let i = 0; i < positions.length; i++) {
 
@@ -159,61 +119,9 @@
       function makeOutListener(infowindow) {
         return function() {
           infowindow.close();
-      };
-    }
-
-    const markerPosition = new kakao.maps.LatLng(lat, lon); // geolocation으로 취득한 위치에 마커 생성
-
-    const myMarker = new kakao.maps.Marker({
-      map: map,
-      draggable: true,
-      clickable: true,
-      position: markerPosition,
-      image: new kakao.maps.MarkerImage(markerImageSrc, markerImageSize, markerImagePosition),
-    }); //마커 생성 및 할당
-    const catMsg = new kakao.maps.CustomOverlay({
-      map: map,
-      position: markerPosition,
-      content: '<div class="overlay">이 위치에 등록하려면 클릭하세요</div>',
-      yAnchor: 0
-    });
-    kakao.maps.event.addListener(myMarker, 'click', function() {
-      // 마커 위에 인포윈도우를 표시합니다
-      infowindow.open(map, myMarker);
-      catMsg.setMap(null)
-    });
-
-    // 인포윈도우 생성
-    const infowindow = new kakao.maps.InfoWindow({
-      content: generateAddMarker(lat, lon),
-      removable: true, //닫기 버튼 활성화
-    });
-
-    // 클릭한 위치에 마커 생성
-    kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
-      // 클릭한 위도, 경도 정보를 가져옵니다
-      const latlng = mouseEvent.latLng;
-      // 마커 위치를 클릭한 위치로 옮깁니다
-      myMarker.setPosition(latlng);
-      infowindow.close(map, myMarker);
-
-      catMsg.setMap(null);
-      catMsg.setPosition(new kakao.maps.LatLng(latlng.getLat(), latlng.getLng()))
-      catMsg.setMap(map)
-
-      kakao.maps.event.addListener(myMarker, 'click', function() {
-      // 마커 위에 인포윈도우를 표시합니다
-        infowindow.setContent(generateAddMarker(latlng.getLat(), latlng.getLng()));
-        infowindow.open(map, myMarker);
-      });
-        console.log(latlng.getLat(), latlng.getLng());
-      });
+        };
+      }
     });
   }
 </script>
-<!-- 고양이 불러오기 -->
-{{context.error}} {% for cat in cats %} {{cat.catname}}
-<a href="{% url 'crud:cat_detail' cat.pk %}">
-  <img src="{{cat.image.first.url}}" alt="catimage" width="300px" />
-</a>
-{% endfor %} {% endblock content %}
+{% endblock content %}
