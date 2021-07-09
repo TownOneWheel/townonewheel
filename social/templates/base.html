@@ -7,10 +7,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>길냥이지도</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
-
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+      integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk"
+      crossorigin="anonymous"
+    />
     {% block head %} {% endblock head %}
   </head>
   <body>
-    <div class="content">{% block content %} {% endblock content %}</div>
+    <div class="container">
+      <header class="header">
+        <h1 class="home"><img class="logo" src="{% static 'logo.svg' %}" alt="홈으로" /></h1>
+        {% if user.is_authenticated %}
+        <h1 class="welcome-msg">{{user.profile.name}}님 안녕하세요</h1>
+        <ul class="reset-list auth-list">
+          <li class="auth-item">
+            <a href="{% url 'social:logout' %}">로그아웃</a>
+          </li>
+          <li class="auth-item">
+            <a
+              onclick="return confirm('정말 탈퇴하시겠습니까 ?')"
+              href="{% url 'social:delete' user.pk %}"
+              >탈퇴하기</a
+            >
+          </li>
+        </ul>
+        {% include 'navbar.html' %} {% else %}
+        <h1 class="welcome-msg">로그인하고 집사가 되어보세요.</h1>
+        <ul class="reset-list auth-list">
+          <li class="auth-item">
+            <a href="{% url 'social:login' %}">로그인</a>
+          </li>
+          <li class="auth-item">
+            <a href="{% url 'social:signup' %}">회원가입</a>
+          </li>
+        </ul>
+        {% endif %}
+      </header>
+      {% block content %} {% endblock content %}
+    </div>
   </body>
 </html>
