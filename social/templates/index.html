@@ -7,44 +7,7 @@
 ></script>
 
 {% endblock head %} {% block content %}
-<header class="header">
-  {% if user.is_authenticated %}
-  <h1 class="welcome-h1">{{user.profile.name}} 님 안녕하세요</h1>
-  <nav class="nav">
-    <ul class="reset-list nav-list">
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'social:detail' user.pk %}">내정보</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'crud:add' %}">길냥이 등록하기</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'crud:search' %}">길냥이 검색하기</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'social:favorite' user.pk %}">즐겨찾기</a>
-      </li>
-      <li class="nav-item">
-        <a
-          class="nav-link"
-          onclick="return confirm('정말 탈퇴하시겠습니까 ?')"
-          href="{% url 'social:delete' user.pk %}"
-          >탈퇴하기</a
-        >
-      </li>
-      <li class="nav-item"><a class="nav-link" href="{% url 'social:logout' %}">로그아웃</a></li>
-    </ul>
-  </nav>
-  {% else %}
-  <nav class="nav">
-    <ul class="reset-list nav-list">
-      <li class="nav-item"><a class="nav-link" href="{% url 'social:login' %}">로그인</a></li>
-      <li class="nav-item"><a class="nav-link" href="{% url 'social:signup' %}">회원가입</a></li>
-    </ul>
-  </nav>
-  {% endif %}
-</header>
-<div id="map" style="width: 100%; height: 60vh"></div>
+<div id="map" style="width: 100%; height: 90vh"></div>
 <script type="text/javascript">
   const $mapContainer = document.getElementById('map'); //지도 div element 취득
   const markerImageSrc = 'https://img.icons8.com/ios-glyphs/60/000000/cat.png',
