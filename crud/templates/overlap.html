@@ -4,8 +4,7 @@
 {% block content %}
 <h1>등록하시려는 고양이가 혹시 이 고양이는 아닌가요?</h1>
 {% for cat_list in cat_lists %}
-<div>{{cat_list.catname}}</div>
-
+<a href="{% url 'crud:cat_detail' cat_list.pk %}">{{cat_list.catname}}</a>
 {% endfor %}
 <h3>{{cat.catname}} 정보 수정하기</h3>
 <form action="{% url 'crud:checked' %}" method="POST" enctype="multipart/form-data">
