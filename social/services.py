@@ -6,6 +6,9 @@ from django.contrib.auth.hashers import check_password
 from dataclasses import dataclass
 from .models import Profile, Relationship
 from crud.models import Cat
+from boto3.session import Session
+from datetime import datetime
+from config.settings import AWS_ACCESS_KEY_ID, AWS_S3_REGION_NAME, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME
 
 @dataclass
 class SignupDto():
@@ -15,7 +18,7 @@ class SignupDto():
     introduction: str
     name: str
     email: str
-
+    profile_img_url: str
 @dataclass
 class LoginDto() :
     userid: str
@@ -52,6 +55,21 @@ class UserService():
         return get_object_or_404(User, pk=user_pk)
     @staticmethod
     def signup(dto: SignupDto):
+
+        file = dto.profile_img_url
+        session = Session(
+            aws_access_key_id=AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+            region_name=AWS_S3_REGION_NAME,
+        )
+        s3 = session.resource('s3')
+        now = datetime.now().strftime('%Y%H%M%S')
+        s3_url="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/"
+        s3.Bucket(AWS_STORAGE_BUCKET_NAME).put_object(
+            Key=now+file.name,
+            Body=file
+        )
+         
         if(not dto.userid or not dto.password or not dto.password_check or not dto.name or not dto.email or not dto.introduction):
             return {'error' : {'state' : True, 'msg' : ERROR_MSG['MISSING_INPUT']}}
         user = User.objects.filter(username=dto.userid, is_active=True)
@@ -63,7 +81,7 @@ class UserService():
             return {'error': {'state': True, 'msg': ERROR_MSG['PASSWORD_CHECK']}}
 
         user = User.objects.create_user(username=dto.userid, password=dto.password) 
-        Profile.objects.create(user=user, name=dto.name, introduction=dto.introduction, email=dto.email)   
+        Profile.objects.create(user=user, name=dto.name, introduction=dto.introduction, email=dto.email, profile_img_url=s3_url+now+file.name)   
 
         return {'error': {'state': False}, 'user' :user}
 

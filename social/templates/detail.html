@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<!--프로필 사진 -->
+<img src="{{user.profile.profile_img_url}}">
 <h3>{{user.profile.name}}</h3>
 <p>{{user.profile.introduction}}</p>
 {% if request.user == user %}
