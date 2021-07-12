@@ -6,9 +6,13 @@
 <h2>{{error.msg}}</h2>
 {% endif %}
 <div class='wrapper'>
+    <img class="logo" src="{% static 'logo.svg' %}" />
     <form class=signupForm action="{% url 'social:signup' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="file" name='image' />
+        <span class="box">
+            <label for="file">프로필 사진 등록</label>
+            <input type="file" id="file" name='image' />
+        </span>
         <span class="box">
             <input type="text" class="int" placeholder="아이디" name="userid" />
         </span>
@@ -27,7 +31,9 @@
         <span class="box">
             <input type="email" class="int" placeholder="이메일" name="email">
         </span>
-        <button type="submit">가입하기</button>
+        <div class="btn_area">
+            <button type="submit" class="btn">가입하기</button>
+        </div>    
     </form>
 </div>
 {% endblock content %}

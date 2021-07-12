@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import SignupView, DetailView, EditView, LoginView, RelationShipView,FavoriteView, CatRelationShipView, logout, delete
+from .views import SignupView,FollowerView, DetailView,FollowView, EditView, LoginView, RelationShipView,FavoriteView, CatRelationShipView, logout, delete
 
 app_name = 'social'
 urlpatterns = [
@@ -13,4 +13,6 @@ urlpatterns = [
     path('detail/<pk>', DetailView.as_view(), name='detail'),
     path('catrelationship/<int:pk>', CatRelationShipView.as_view(),name='catrelationship'),
     path('favorite/<int:pk>', FavoriteView.as_view(),name='favorite'),
+    path('follow/<int:pk>', FollowView.as_view(), name='follow'),
+    path('follower/<int:pk>', FollowerView.as_view(), name='follower'),
 ]

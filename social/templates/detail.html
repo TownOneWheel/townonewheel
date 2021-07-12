@@ -1,13 +1,15 @@
-{% extends "base.html" %}
-{% block content %}
-<img src="{{user.profile.profile_img_url}}">
+{% extends "base.html" %} {% block content %} {% load static %}
+<link rel="stylesheet" href="{% static 'css/detail.css' %}" />
+<div class="box">
+    <img class=img src="{{user.profile.profile_img_url}}">
+</div>
 <h3>{{user.profile.name}}</h3>
 <p>{{user.profile.introduction}}</p>
 {% if request.user == user %}
 <a href="{% url 'social:edit' user.pk %}">수정하기</a>
 {% endif %}
-<div>팔로워 {{user.relationship.followers.all.count}}</div>
-<div>팔로우 {{user.following.all.count}}</div>
+<a href="{% url 'social:follower' user.pk %}"><div>팔로워 {{user.relationship.followers.all.count}}</div></a>
+<a href="{% url 'social:follow' user.pk %}"><div>팔로우 {{user.following.all.count}}</div></a>
 {% if request.user != user %}
 <form action="{% url 'social:relationship' user.pk %}" method='POST'>
     {% csrf_token %}
@@ -18,8 +20,10 @@
     {% endif %}
 </form>
 {% endif %}
+<span>등록한 고양이</span>
+<br>
 {% for cat in user.upload.all %}
-{{cat.catname}}
+<a href="{% url 'crud:cat_detail' cat.pk %}">{{cat.catname}}</a>
 {% endfor %}
 
 {% endblock content %}
