@@ -2,8 +2,10 @@ from django.db import models
 from django.db.models.fields import NullBooleanField
 from django.contrib.auth.models import User, update_last_login
 
+from behavior import BaseField
 
-class Cat(models.Model):
+
+class Cat(BaseField):
     catname = models.CharField(max_length=64)
     gender = models.CharField(max_length=20, null=True, blank=True)
     color = models.CharField(max_length=20, null=True, blank=True)
@@ -21,7 +23,7 @@ class CatImage(models.Model):
     cat = models.ForeignKey(Cat, on_delete=models.SET_NULL, related_name='image', null=True, blank=True)
     url = models.TextField(null=True, blank=True)
 
-class Comment(models.Model):
+class Comment(BaseField):
     cat = models.ForeignKey(Cat, on_delete=models.SET_NULL, related_name='cat', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='writer', null=True, blank=True)
     content = models.TextField()

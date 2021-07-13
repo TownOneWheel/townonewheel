@@ -164,6 +164,11 @@ class EditView(View):
         )
         return redirect('crud:cat_detail', kwargs['pk'])
 
+def CatDelete(request, pk):
+    cat = Cat.objects.filter(pk=pk)
+    cat.update(catname='deleted_cat', is_deleted=True, location_lat=0, location_lon=0)
+    return redirect('index')
+
 class SearchView(View):
     def get(self, request, *args, **kwargs):
         keyword = request.GET.get('keyword', '')
