@@ -7,7 +7,11 @@
 </form>
 <br>
 <br>
-{% if search_cat %}
+{% if search_cats %}
+{% for search_cat in search_cats %}
 <a href="{% url 'crud:cat_detail' search_cat.pk %}">{{search_cat.catname}}</a>
+{% endfor %}
+{% else %}
+<p>검색된 고양이가 없습니다.</p>
 {% endif %}
 {% endblock content %}
