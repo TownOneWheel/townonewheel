@@ -175,12 +175,13 @@ def CatDelete(request, pk):
 class SearchView(View):
     def get(self, request, *args, **kwargs):
         keyword = request.GET.get('keyword', '')
-        search_cat = {}
+        search_cats = {}
         if keyword:
-            search_cat = Cat.objects.filter(
+            search_cats = Cat.objects.filter(
                 Q(catname__icontains=keyword)
-            ).first()
-        return render(request, 'search.html', { 'search_cat': search_cat })
+            )
+            print(search_cats)
+        return render(request, 'search.html', { 'search_cats': search_cats })
 
 class CommentView(View):
     def get(self, request, *args, **kwargs):
