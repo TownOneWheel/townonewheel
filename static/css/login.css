@@ -34,3 +34,6 @@
   font-size: 20px;
   margin-top: 30px;;
 }
+.header{
+  display: none;
+}
