@@ -17,6 +17,7 @@
 {% if cat.upload_user == user %}
 <br>
 <a href="{% url 'crud:cat_edit' cat.pk %}">고양이 정보 수정하기</a>
+<a onclick="return confirm('정말 고양이를 삭제 하시겠습니까?')" href="{% url 'crud:cat_delete' cat.pk %}">고양이 삭제하기</a>
 {% endif %}
 <br>
 <br>
