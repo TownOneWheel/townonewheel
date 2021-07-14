@@ -1,12 +1,14 @@
-.cat-info {
-  padding: 5px;
+.cat-info-window {
+  padding: 15px;
+  width: 200px;
 }
-.cat-info h2 {
-  display: inline-block;
+.cat-info-window h2 {
+  display: flex;
+  align-items: center;
 }
 .cat-profile-img {
-  width: 5vw;
-  height: 5vw;
+  width: 15vw;
+  height: 15vw;
   border-radius: 50%;
 }
 

@@ -17,9 +17,9 @@
       {% for cat in cats %}
       {
         title: '{{ cat.catname }}',
-        content: `<div class="cat-info" style="width: 200px; height: 200px; background-color: yellow; overflow: auto;">
-          <img src="{{cat.image.first.url}}" alt="catimage" class="cat-profile-img"/>
-          <h2><a href="{% url 'crud:cat_detail' cat.pk %}">{{ cat.catname }}</a></h2>
+        content: `<div class="cat-info-window">
+          <h2><img src="{{cat.image.first.url}}" alt="catimage" class="cat-profile-img"/>
+          <a href="{% url 'crud:cat_detail' cat.pk %}">{{ cat.catname }}</a></h2>
           <ul class="reset-list cat-info-list">
           <li>성별: {{ cat.gender }}</li>
           <li>색깔: {{ cat.color }}</li>
@@ -47,11 +47,7 @@
 
 
       for (let i = 0; i < positions.length; i++) {
-
-        // 마커 이미지를 생성합니다
         const markerImage = new kakao.maps.MarkerImage(markerImageSrc, markerImageSize, markerImagePosition);
-
-        // 마커를 생성합니다
         const marker = new kakao.maps.Marker({
           map: map, // 마커를 표시할 지도
           position: positions[i].latlng, // 마커를 표시할 위치
@@ -62,9 +58,15 @@
           content: positions[i].content, // 인포윈도우에 표시할 내용
           removable: true
         });
+        const catDetail = new kakao.maps.CustomOverlay({
+          map: map,
+          position: positions[i].latlng,
+          content: `<a href="/crud/cat_detail/${positions[i].pk}" class="cat-detail-link">${positions[i].title}</a>`,
+          yAnchor: 0
+        });
+        catDetail.setMap(map)
         kakao.maps.event.addListener(marker, 'click', makeOverListener(map, marker, catInfowindow));
       }
-
       function makeOverListener(map, marker, infowindow) {
         return function() {
           infowindow.open(map, marker);

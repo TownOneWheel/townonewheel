@@ -1,34 +1,43 @@
-{% extends "base.html" %}
-
-{% block content %}
-{{cat.catname}}
-<form action="{% url 'social:catrelationship' cat.pk %}" method='POST'>
-  {% csrf_token %}
-  {% if cat in user.relationship.favorite_cat.all %}
-  <button type='submit'>즐겨찾기 취소</button>
-  {% else %}
-  <button type='submit'>즐겨찾기</button>
+{% extends "base.html" %} {% load static %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/cat_detail.css' %}" />
+{% endblock head %} {% block content %}
+<section class="cat-detail-section">
+  <h2>{{cat.catname}}</h2>
+  {% if cat.upload_user == user %}
+  <p><a href="{% url 'crud:cat_edit' cat.pk %}">고양이 정보 수정하기</a></p>
   {% endif %}
-</form>
-<br>
-{% for image_list in image_lists %}
-<img src="{{image_list.url}}" alt="catimage" style="height: 200px; width: 200px;">
-{% endfor %}
-{% if cat.upload_user == user %}
-<br>
-<a href="{% url 'crud:cat_edit' cat.pk %}">고양이 정보 수정하기</a>
-{% endif %}
-<br>
-<br>
-<a href="{% url 'social:detail' cat.upload_user.pk %}">{{cat.upload_user}}</a>
-<form action="{% url 'crud:comment' cat.pk%}" method="POST">
-  {% csrf_token %}
-  <input type="text" name='content'>
-  <button type="submit">댓글 작성하기</button>
-</form>
-{% for comment in comments %}
-<div>작성자 : {{comment.user}}</div>
-<div>댓글 : {{comment.content}}</div>
-<br>
-{% endfor %}
+  <form action="{% url 'social:catrelationship' cat.pk %}" method="POST">
+    {% csrf_token %} {% if cat in user.relationship.favorite_cat.all %}
+    <button type="submit">즐겨찾기 취소</button>
+    {% else %}
+    <button type="submit">즐겨찾기</button>
+    {% endif %}
+  </form>
+  <h3>사진첩</h3>
+  <ul class="cat-photobook">
+    {% for image_list in image_lists %}
+    <li class="cat-photo-item">
+      <img src="{{image_list.url}}" alt="catimage" style="height: 200px; width: 200px" />
+      <a href="{% url 'social:detail' cat.upload_user.pk %}">{{cat.upload_user}}</a>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+<section class="comment-section">
+  <h2>댓글</h2>
+  <ul class="comment-list">
+    {% for comment in comments %}
+    <li class="comment-item">
+      {{comment.content}} - 작성자 :
+      <a href="{% url 'social:detail' comment.user.pk %}"></a>{{comment.user}}
+    </li>
+    {% endfor %}
+  </ul>
+  <h2>댓글 작성하기</h2>
+  <form action="{% url 'crud:comment' cat.pk%}" method="POST">
+    {% csrf_token %}
+    <input type="text" name="content" />
+    <button type="submit">댓글 작성하기</button>
+  </form>
+</section>
 {% endblock content %}

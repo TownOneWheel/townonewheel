@@ -25,13 +25,6 @@
           <li class="auth-item">
             <a href="{% url 'social:logout' %}">로그아웃</a>
           </li>
-          <li class="auth-item">
-            <a
-              onclick="return confirm('정말 탈퇴하시겠습니까 ?')"
-              href="{% url 'social:delete' user.pk %}"
-              >탈퇴하기</a
-            >
-          </li>
         </ul>
         {% include 'navbar.html' %} {% else %}
         <h1 class="welcome-msg">로그인하고 집사가 되어보세요.</h1>

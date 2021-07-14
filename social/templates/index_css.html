@@ -39,20 +39,20 @@
         <nav class="nav">
           <ul class="reset-list nav-list">
             <li class="nav-item">
-              <i class="fas fa-paw"><a class="nav-link" href="/crud/add/">길냥이 등록하기</a></i>
+              <i class="icon fas fa-paw"></i>
+              <a class="nav-link" href="/crud/add/">Add</a>
             </li>
             <li class="nav-item">
-              <i class="far fa-star">
-                <a class="nav-link" href="/social/favorite/3">즐겨찾기</a>
-              </i>
+              <i class="icon far fa-star"></i>
+              <a class="nav-link" href="/social/favorite/3">Favorite</a>
             </li>
             <li class="nav-item">
-              <i class="far fa-user"><a class="nav-link" href="/social/detail/3">내정보</a></i>
+              <i class="icon far fa-user"></i>
+              <a class="nav-link" href="/social/detail/3">My Page</a>
             </li>
             <li class="nav-item">
-              <i class="fas fa-search">
-                <a class="nav-link" href="/crud/search/">길냥이 검색하기</a>
-              </i>
+              <i class="icon fas fa-search"></i>
+              <a class="nav-link" href="/crud/search/">Search</a>
             </li>
           </ul>
         </nav>
@@ -67,8 +67,9 @@
         const positions = [
           {
             title: '성수동고양이',
-            content: `<div class="cat-info" style="width: 100px; height: 100px; background-color: yellow; overflow: auto;"><img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021033107techtalk00.png" alt="catimage" class="cat-profile-img"/>
-          <h2>성수동고양이</h2>
+            content: `<div class="cat-info-window">
+          <img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021033107techtalk00.png" alt="catimage" class="cat-profile-img"/>
+          <h2><a href="/crud/cat_detail/1">성수동고양이</a></h2>
           <ul class="reset-list cat-info-list">
           <li>성별: male</li>
           <li>색깔: yellow</li>
@@ -80,8 +81,9 @@
 
           {
             title: '호랑이',
-            content: `<div class="cat-info" style="width: 100px; height: 100px; background-color: yellow; overflow: auto;"><img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021140009hackerrank.jpg" alt="catimage" class="cat-profile-img"/>
-          <h2>호랑이</h2>
+            content: `<div class="cat-info-window">
+          <img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021140009hackerrank.jpg" alt="catimage" class="cat-profile-img"/>
+          <h2><a href="/crud/cat_detail/2">호랑이</a></h2>
           <ul class="reset-list cat-info-list">
           <li>성별: male</li>
           <li>색깔: yellow</li>
@@ -93,8 +95,9 @@
 
           {
             title: '제발되어라',
-            content: `<div class="cat-info" style="width: 100px; height: 100px; background-color: yellow; overflow: auto;"><img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021005057djangoproject01.jpg" alt="catimage" class="cat-profile-img"/>
-          <h2>제발되어라</h2>
+            content: `<div class="cat-info-window">
+          <img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021005057djangoproject01.jpg" alt="catimage" class="cat-profile-img"/>
+          <h2><a href="/crud/cat_detail/3">제발되어라</a></h2>
           <ul class="reset-list cat-info-list">
           <li>성별: male</li>
           <li>색깔: yellow</li>
@@ -106,8 +109,9 @@
 
           {
             title: '테스트냥',
-            content: `<div class="cat-info" style="width: 100px; height: 100px; background-color: yellow; overflow: auto;"><img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021033937djangoproject.jpg" alt="catimage" class="cat-profile-img"/>
-          <h2>테스트냥</h2>
+            content: `<div class="cat-info-window">
+          <img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021033937djangoproject.jpg" alt="catimage" class="cat-profile-img"/>
+          <h2><a href="/crud/cat_detail/4">테스트냥</a></h2>
           <ul class="reset-list cat-info-list">
           <li>성별: dont_know</li>
           <li>색깔: yellow</li>
@@ -119,8 +123,9 @@
 
           {
             title: '테스트냥',
-            content: `<div class="cat-info" style="width: 100px; height: 100px; background-color: yellow; overflow: auto;"><img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021034026techtalk02.png" alt="catimage" class="cat-profile-img"/>
-          <h2>테스트냥</h2>
+            content: `<div class="cat-info-window">
+          <img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021034026techtalk02.png" alt="catimage" class="cat-profile-img"/>
+          <h2><a href="/crud/cat_detail/5">테스트냥</a></h2>
           <ul class="reset-list cat-info-list">
           <li>성별: male</li>
           <li>색깔: yellow</li>
@@ -132,8 +137,9 @@
 
           {
             title: '퓨마',
-            content: `<div class="cat-info" style="width: 100px; height: 100px; background-color: yellow; overflow: auto;"><img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021075903linkedlist.jpg" alt="catimage" class="cat-profile-img"/>
-          <h2>퓨마</h2>
+            content: `<div class="cat-info-window">
+          <img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021075903linkedlist.jpg" alt="catimage" class="cat-profile-img"/>
+          <h2><a href="/crud/cat_detail/6">퓨마</a></h2>
           <ul class="reset-list cat-info-list">
           <li>성별: female</li>
           <li>색깔: yellow</li>
@@ -145,8 +151,9 @@
 
           {
             title: 'test',
-            content: `<div class="cat-info" style="width: 100px; height: 100px; background-color: yellow; overflow: auto;"><img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021023431djangoproject04.jpg" alt="catimage" class="cat-profile-img"/>
-          <h2>test</h2>
+            content: `<div class="cat-info-window">
+          <img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021023431djangoproject04.jpg" alt="catimage" class="cat-profile-img"/>
+          <h2><a href="/crud/cat_detail/7">test</a></h2>
           <ul class="reset-list cat-info-list">
           <li>성별: male</li>
           <li>색깔: yellow</li>
@@ -158,8 +165,9 @@
 
           {
             title: 'adf',
-            content: `<div class="cat-info" style="width: 100px; height: 100px; background-color: yellow; overflow: auto;"><img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021032805techtalk01.png" alt="catimage" class="cat-profile-img"/>
-          <h2>adf</h2>
+            content: `<div class="cat-info-window">
+          <img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021032805techtalk01.png" alt="catimage" class="cat-profile-img"/>
+          <h2><a href="/crud/cat_detail/8">adf</a></h2>
           <ul class="reset-list cat-info-list">
           <li>성별: female</li>
           <li>색깔: yellow</li>
@@ -171,8 +179,9 @@
 
           {
             title: '테스트01',
-            content: `<div class="cat-info" style="width: 100px; height: 100px; background-color: yellow; overflow: auto;"><img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021083939techtalk01.png" alt="catimage" class="cat-profile-img"/>
-          <h2>테스트01</h2>
+            content: `<div class="cat-info-window">
+          <img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021083939techtalk01.png" alt="catimage" class="cat-profile-img"/>
+          <h2><a href="/crud/cat_detail/9">테스트01</a></h2>
           <ul class="reset-list cat-info-list">
           <li>성별: male</li>
           <li>색깔: yellow</li>
@@ -184,8 +193,9 @@
 
           {
             title: '테스트0111',
-            content: `<div class="cat-info" style="width: 100px; height: 100px; background-color: yellow; overflow: auto;"><img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021084032techtalk00.png" alt="catimage" class="cat-profile-img"/>
-          <h2>테스트0111</h2>
+            content: `<div class="cat-info-window">
+          <img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021084032techtalk00.png" alt="catimage" class="cat-profile-img"/>
+          <h2><a href="/crud/cat_detail/10">테스트0111</a></h2>
           <ul class="reset-list cat-info-list">
           <li>성별: male</li>
           <li>색깔: yellow</li>
@@ -197,8 +207,9 @@
 
           {
             title: '테스트01',
-            content: `<div class="cat-info" style="width: 100px; height: 100px; background-color: yellow; overflow: auto;"><img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021085038djangoproject.jpg" alt="catimage" class="cat-profile-img"/>
-          <h2>테스트01</h2>
+            content: `<div class="cat-info-window">
+          <img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021085038djangoproject.jpg" alt="catimage" class="cat-profile-img"/>
+          <h2><a href="/crud/cat_detail/11">테스트01</a></h2>
           <ul class="reset-list cat-info-list">
           <li>성별: male</li>
           <li>색깔: yellow</li>
@@ -210,8 +221,9 @@
 
           {
             title: '테스트냥',
-            content: `<div class="cat-info" style="width: 100px; height: 100px; background-color: yellow; overflow: auto;"><img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021054317chick.png" alt="catimage" class="cat-profile-img"/>
-          <h2>테스트냥</h2>
+            content: `<div class="cat-info-window">
+              <h2><img src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021054317chick.png" alt="catimage" class="cat-profile-img"/>
+          <a href="/crud/cat_detail/12">테스트냥</a></h2>
           <ul class="reset-list cat-info-list">
           <li>성별: male</li>
           <li>색깔: yellow</li>
@@ -237,14 +249,11 @@
             const map = new kakao.maps.Map($mapContainer, mapOption); // 지도 생성 및 할당
 
             for (let i = 0; i < positions.length; i++) {
-              // 마커 이미지를 생성합니다
               const markerImage = new kakao.maps.MarkerImage(
                 markerImageSrc,
                 markerImageSize,
                 markerImagePosition
               );
-
-              // 마커를 생성합니다
               const marker = new kakao.maps.Marker({
                 map: map, // 마커를 표시할 지도
                 position: positions[i].latlng, // 마커를 표시할 위치
@@ -262,25 +271,15 @@
                 yAnchor: 0,
               });
               catDetail.setMap(map);
-              // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
-              // 이벤트 리스너로는 클로저를 만들어 등록합니다
-              // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
               kakao.maps.event.addListener(
                 marker,
-                'mouseover',
+                'click',
                 makeOverListener(map, marker, catInfowindow)
               );
-              kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(catInfowindow));
             }
-
             function makeOverListener(map, marker, infowindow) {
               return function () {
                 infowindow.open(map, marker);
-              };
-            }
-            function makeOutListener(infowindow) {
-              return function () {
-                infowindow.close();
               };
             }
           });
