@@ -1,51 +1,57 @@
 {% extends "base.html" %} {% block head %}
+{% load static %}
 <script
   type="text/javascript"
   src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2afb1fc4dd038efa23fc18c55f594205&libraries=services,clusterer,drawing"
 ></script>
+<link rel="stylesheet" href="{% static 'css/add.css' %}">
 {% endblock head %} {% block content %}
-<div class="cat-register">
+<h1>고양이를 등록해주세요!</h1>
+<div class="cat-register total">
   <form class="cat-form" action="{% url 'crud:add' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <label>이름: <input type="text" name="catname" placeholder="길냥이 이름" /></label>
+    <label>이름<input type="text" name="catname" placeholder="길냥이 이름" class="input"/></label>
     <label
-      >개냥이 지수: <input type="text" name="friendly" placeholder="사람과의 친밀도 (%)"
+      >개냥이 지수<input type="text" name="friendly" placeholder="사람과의 친밀도 (%)"  class="input"
     /></label>
-    <label class="file-input"
-      >사진: <span>업로드</span><input hidden type="file" name="img" multiple
+    <label class="file-input upload"
+      ><input hidden type="file" name="img" multiple
     /></label>
-    <label
-      >성별:
-      <select name="gender">
-        <option value="male">수컷</option>
-        <option value="female">암컷</option>
-        <option value="dont_know">모름</option>
+    <div class="select">
+    <label class="option"
+      >성별
+      <select name="gender" class="option_list">
+        <option value="수컷">수컷</option>
+        <option value="암컷">암컷</option>
+        <option value="모름">모름</option>
       </select></label
     >
-    <label
-      >색상:
-      <select name="color">
-        <option value="yellow">노란색</option>
-        <option value="yellow">검은색</option>
-        <option value="yellow">흰색</option>
-        <option value="yellow">주황색</option>
-        <option value="yellow">회색</option>
+    <label class="option"
+      >색상
+      <select name="color" class="option_list">
+        <option value="노란색">노란색</option>
+        <option value="검은색">검은색</option>
+        <option value="흰색">흰색</option>
+        <option value="주황색">주황색</option>
+        <option value="회색">회색</option>
       </select></label
     >
-    <label
-      >중성화:
-      <select name="neutering">
+    <label class="option"
+      >중성화
+      <select name="neutering" class="option_list">
         <option value="O">O</option>
         <option value="X">X</option>
-        <option value="dont_know">모름</option>
+        <option value="모름">모름</option>
       </select></label
     >
+  </div>
     <input class="location-lat" type="hidden" name="location_lat" value="null" />
     <input class="location-lon" type="hidden" name="location_lon" value="null" />
-    <button type="submit">등록</button>
+    <div id="map" style="width: 100%; height: 50vh; border: solid 1px black;"></div>
+    <button type="submit" class="btn">등록</button>
   </form>
 </div>
-<div id="map" style="width: 100%; height: 50vh"></div>
+
 <script type="text/javascript">
   const $mapContainer = document.getElementById('map'); //지도 div element 취득
   const markerImageSrc = 'https://img.icons8.com/ios-glyphs/60/000000/cat.png',

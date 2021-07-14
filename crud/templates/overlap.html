@@ -1,60 +1,118 @@
-<div class="cat-register" style="padding:5px;">
-  {% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block head %}
+{% load static %}
+<script
+  type="text/javascript"
+  src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2afb1fc4dd038efa23fc18c55f594205&libraries=services,clusterer,drawing"
+></script>
+<link rel="stylesheet" href="{% static 'css/add.css' %}">
+{% endblock head %}{% block content %}
 <h1>등록하시려는 고양이가 혹시 이 고양이는 아닌가요?</h1>
 {% for cat_list in cat_lists %}
 <a href="{% url 'crud:cat_detail' cat_list.pk %}">{{cat_list.catname}}</a>
 {% endfor %}
-<h3>{{cat.catname}} 정보 수정하기</h3>
-<form action="{% url 'crud:checked' %}" method="POST" enctype="multipart/form-data">
-  {% csrf_token %}
-  <p>이름 : 
-    <input type="text" name="catname" placeholder="길냥이 이름" value="{{catname}}">
-  </p>
-  <p>개냥이 지수 : 
-    <input type="text" name="friendly" placeholder="사람과의 친밀도 (%)" value="{{friendly}}">
-  </p>
-  <input type="file" name="img">
-  <div>성별 : 
-    <select name="gender">
-      <option value="male">수컷</option>
-      <option value="female">암컷</option>
-      <option value="dont_know">모름</option>
-    </select>
+<div class="cat-register total">
+  <form action="{% url 'crud:checked' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label>이름<input type="text" name="catname" placeholder="길냥이 이름" class="input" value="{{catname}}"/>
+    </label>
+    <label
+      >개냥이 지수<input type="text" name="friendly" placeholder="사람과의 친밀도 (%)"  class="input" value="{{friendly}}"
+    /></label>
+    <label class="file-input upload"
+      ><input hidden type="file" name="img" multiple
+    /></label>
+    <div class="select">
+    <label class="option"
+      >성별
+      <select name="gender" class="option_list">
+        <option value="수컷">수컷</option>
+        <option value="암컷">암컷</option>
+        <option value="모름">모름</option>
+      </select></label
+    >
+    <label class="option"
+      >색상
+      <select name="color" class="option_list">
+        <option value="노란색">노란색</option>
+        <option value="검은색">검은색</option>
+        <option value="흰색">흰색</option>
+        <option value="주황색">주황색</option>
+        <option value="회색">회색</option>
+      </select></label
+    >
+    <label class="option"
+      >중성화
+      <select name="neutering" class="option_list">
+        <option value="O">O</option>
+        <option value="X">X</option>
+        <option value="모름">모름</option>
+      </select></label
+    >
   </div>
-  <div>색상 : <select name="color">
-      <option value="yellow">노란색</option>
-      <option value="black">검은색</option>
-      <option value="white">흰색</option>
-      <option value="orange">주황색</option>
-      <option value="gray">회색</option>
-    </select>
-    <select name="color">
-      <option value="yellow">노란색</option>
-      <option value="black">검은색</option>
-      <option value="white">흰색</option>
-      <option value="orange">주황색</option>
-      <option value="gray">회색</option>
-    </select>
-  </div>
-  <div>중성화 여부 :
-    <select name="neutering">
-      <option value="O">O</option>
-      <option value="X">X</option>
-      <option value="dont_know">모름</option>
-    </select>
-  </div>
-  <p>발견 위치 : 
-    <input type="hidden" name="location_lat" value="{{location_lat}}"/>
-    <input type="hidden" name="location_lon" value="{{location_lon}}"/>
-  </p>
-  <br>
-  <button type="submit">고양이 등록 하기</button>
-</form>
-<form action="{% url 'index' %}" method="GET">
-  {% csrf_token%}
-  <button type="submit">등록 취소</button>
-</form>
+    <input class="location-lat" type="hidden" name="location_lat" value="{{location_lat}}" />
+    <input class="location-lon" type="hidden" name="location_lon" value="{{location_lon}}" />
+    <div id="map" style="width: 100%; height: 50vh; border: solid 1px black;"></div>
+    <button type="submit" class="btn">등록</button>
+  </form>
+  <form action="{% url 'index' %}" method="GET">
+    {% csrf_token%}
+    <button type="submit" class="btn">등록 취소</button>
+  </form>
 </div>
+<script type="text/javascript">
+  const $mapContainer = document.getElementById('map'); //지도 div element 취득
+  const markerImageSrc = 'https://img.icons8.com/ios-glyphs/60/000000/cat.png',
+    markerImageSize = new kakao.maps.Size(40, 40),
+    markerImagePosition = { offset: new kakao.maps.Point(27, 40) };
+  const $lat_input = document.querySelector('.location-lat'),
+    $lon_input = document.querySelector('.location-lon');
+
+  if (navigator.geolocation) {
+    // GeoLocation가 활성화되어있는 경우 접속 위치 취득 및 콜백함수 호출
+    navigator.geolocation.getCurrentPosition(function (position) {
+      const lat = position.coords.latitude, // 위도 취득
+        lon = position.coords.longitude; // 경도 취득
+
+      console.log(lat, lon);
+      const mapOption = {
+        center: new kakao.maps.LatLng(lat, lon), // 지도의 중심좌표
+        level: 3, // 지도의 확대 레벨
+      };
+      const map = new kakao.maps.Map($mapContainer, mapOption); // 지도 생성 및 할당
+      const markerPosition = new kakao.maps.LatLng(lat, lon); // geolocation으로 취득한 위치에 마커 생성
+
+      const myMarker = new kakao.maps.Marker({
+        map: map,
+        draggable: true,
+        clickable: true,
+        position: markerPosition,
+        image: new kakao.maps.MarkerImage(markerImageSrc, markerImageSize, markerImagePosition),
+      }); //마커 생성 및 할당
+      const catMsg = new kakao.maps.CustomOverlay({
+        map: map,
+        position: markerPosition,
+        content: '<div class="overlay">수정할 고양이 위치를 정해주세요</div>',
+        yAnchor: 0,
+      });
+      kakao.maps.event.addListener(myMarker, 'click', function () {
+        console.log('마커클릭시 발생하는 이벤트');
+      });
+      $lat_input.value = lat;
+      $lon_input.value = lon;
+      // 클릭한 위치에 마커 생성
+      kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+        // 클릭한 위도, 경도 정보를 가져옵니다
+        const latlng = mouseEvent.latLng;
+        // 마커 위치를 클릭한 위치로 옮깁니다
+        myMarker.setPosition(latlng);
+        catMsg.setMap(null);
+        catMsg.setPosition(new kakao.maps.LatLng(latlng.getLat(), latlng.getLng()));
+        catMsg.setMap(map);
+        $lat_input.value = latlng.getLat();
+        $lon_input.value = latlng.getLng();
+        console.log(latlng.getLat(), latlng.getLng());
+      });
+    });
+  }
+</script>
 {% endblock content %}
