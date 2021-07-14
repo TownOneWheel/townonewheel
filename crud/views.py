@@ -34,6 +34,9 @@ class AddView(View):
         for location_file_list in location_file_lists:
             file_path = os.path.splitext(location_file_list)[0]
             location_file_names.append(file_path.split('/')[-1])
+        if not catname or not friendly:
+            content = {'state': True, 'error': '빈 항목이 있습니다. 모두 채워주세요!'}
+            return render(request, 'cat_add.html', content)
         if cat_locations in location_file_names:
             with open('./crud/cat_location/{}.txt'.format(cat_locations), 'r') as f:
                 cat_list = f.readlines()
