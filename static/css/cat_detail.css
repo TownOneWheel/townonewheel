@@ -1,6 +1,11 @@
 .favorite-form {
   text-align: center;
 }
+
+#catDetailMap {
+  width: 100vw;
+  height: 50vh;
+}
 h2,
 h3 {
   text-align: center;

@@ -1,5 +1,10 @@
 {% extends "base.html" %} {% load static %} {% block head %}
 <link rel="stylesheet" href="{% static 'css/cat_detail.css' %}" />
+<script
+  type="text/javascript"
+  src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2afb1fc4dd038efa23fc18c55f594205&libraries=services,clusterer,drawing"
+></script>
+
 {% endblock head %} {% block content %}
 <section class="cat-detail-section">
   <h2>
@@ -24,8 +29,7 @@
       발견한 유저: <a href="{% url 'social:detail' cat.upload_user.pk %}">{{cat.upload_user}}</a>
     </li>
     <li>
-      위치
-      <div></div>
+      <div id="catDetailMap"></div>
     </li>
   </ul>
   {% if cat.upload_user == request.user %}
@@ -58,4 +62,27 @@
     </form>
   </section>
 </section>
+<script>
+  const $mapContainer = document.getElementById('catDetailMap'), // 지도를 표시할 div
+    mapOption = {
+        center: new kakao.maps.LatLng({{cat.location_lat}}, {{cat.location_lon}}), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };
+  const map = new kakao.maps.Map($mapContainer, mapOption); // 지도 생성 및 할당
+
+  const markerPosition = new kakao.maps.LatLng({{cat.location_lat}}, {{cat.location_lon}});
+  const markerImageSrc = 'https://img.icons8.com/ios-glyphs/60/000000/cat.png',
+    markerImageSize = new kakao.maps.Size(40, 40),
+    markerImagePosition = { offset: new kakao.maps.Point(27, 40) };
+  const markerImage = new kakao.maps.MarkerImage(markerImageSrc, markerImageSize, markerImagePosition);
+
+
+  const marker = new kakao.maps.Marker({
+          map: map, // 마커를 표시할 지도
+          position: markerPosition,
+          image: markerImage, // 마커 이미지
+        });
+
+  // 이미지 지도를 생성합니다
+</script>
 {% endblock content %}
