@@ -1,18 +1,39 @@
-{% extends "base.html" %}
-
+{% extends "base.html" %} {% load static %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}" />
+{% endblock head %}
 {% block content %}
 {% if error.state %}
 <h2>{{error.msg}}</h2>
 {% endif %}
-<form action="{% url 'social:signup' %}" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" name='image' >
-    <input type="text" placeholder="아이디" name="userid" />
-    <input type="password" placeholder="비밀번호" name="password" />
-    <input type="password" placeholder="비밀번호 확인" name="password_check" />
-    <input type="text" placeholder="이름" name="name" />
-    <textarea placeholder="자기소개" name="introduction"></textarea>
-    <input type="email" placeholder="이메일" name="email">
-    <button type="submit">회원가입하기</button>
-</form>
+<div class='wrapper'>
+    <img class="logo" src="{% static 'logo.svg' %}" />
+    <form class=signupForm action="{% url 'social:signup' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <span class="box">
+            <label for="file">프로필 사진 등록</label>
+            <input type="file" id="file" name='image' />
+        </span>
+        <span class="box">
+            <input type="text" class="int" placeholder="아이디" name="userid" />
+        </span>
+        <span class="box">
+            <input type="password" class="int" placeholder="비밀번호" name="password" />
+        </span>
+        <span class="box">
+        <input type="password" class="int" placeholder="비밀번호 확인" name="password_check" />
+        </span>
+        <span class="box">
+            <input type="text" class="int" placeholder="이름" name="name" />
+        </span> 
+        <span class="box">
+            <textarea class="int"placeholder="자기소개" name="introduction"></textarea>
+        </span>
+        <span class="box">
+            <input type="email" class="int" placeholder="이메일" name="email">
+        </span>
+        <div class="btn_area">
+            <button type="submit" class="btn">가입하기</button>
+        </div>    
+    </form>
+</div>
 {% endblock content %}

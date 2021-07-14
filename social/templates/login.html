@@ -1,10 +1,21 @@
-{% extends "base.html" %} {% block content %} {% if error.state %}
+{% extends "base.html" %} {% block content %} {% load static %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}" />
+{% if error.state %}
 <h2>{{error.msg}}</h2>
 {% endif %}
-<form action="{% url 'social:login' %}" method="POST">
-  {% csrf_token %}
-  <input type="text" placeholder="아이디" name="userid" />
-  <input type="password" placeholder="비밀번호" name="password" />
-  <button type="submit">로그인하기</button>
-</form>
+<div class="wrapper">
+  <img class="logo" src="{% static 'logo.svg' %}" />
+  <form action="{% url 'social:login' %}" method="POST">
+    {% csrf_token %}
+    <span class="box">
+      <input type="text" class="int" placeholder="아이디" name="userid" />
+    </span>
+    <span class="box">
+      <input type="password" class="int" placeholder="비밀번호" name="password" />
+    </span>
+    <div class="btn_area">
+      <button class="btn" type="submit">로그인하기</button>
+    </div>
+  </form>
+</div>
 {% endblock content %}

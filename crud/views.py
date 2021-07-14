@@ -1,7 +1,6 @@
 from django.shortcuts import redirect, render
 from django.views.generic import View, DetailView
 from django.db.models import Q
-from decimal import Decimal
 from config.settings import AWS_ACCESS_KEY_ID, AWS_S3_REGION_NAME, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME
 
 import boto3
@@ -35,6 +34,9 @@ class AddView(View):
         for location_file_list in location_file_lists:
             file_path = os.path.splitext(location_file_list)[0]
             location_file_names.append(file_path.split('/')[-1])
+        if not catname or not friendly:
+            content = {'state': True, 'error': '빈 항목이 있습니다. 모두 채워주세요!'}
+            return render(request, 'cat_add.html', content)
         if cat_locations in location_file_names:
             with open('./crud/cat_location/{}.txt'.format(cat_locations), 'r') as f:
                 cat_list = f.readlines()
@@ -159,20 +161,27 @@ class EditView(View):
             gender=request.POST['gender'],
             color=request.POST['color'],
             neutering=request.POST['neutering'],
-            location=request.POST['location'],
+            location_lat=request.POST['location_lat'],
+            location_lon=request.POST['location_lon'],
             upload_user=request.user,
         )
         return redirect('crud:cat_detail', kwargs['pk'])
 
+def CatDelete(request, pk):
+    cat = Cat.objects.filter(pk=pk)
+    cat.update(catname='deleted_cat', is_deleted=True, location_lat=0, location_lon=0)
+    return redirect('index')
+
 class SearchView(View):
     def get(self, request, *args, **kwargs):
         keyword = request.GET.get('keyword', '')
-        search_cat = {}
+        search_cats = {}
         if keyword:
-            search_cat = Cat.objects.filter(
+            search_cats = Cat.objects.filter(
                 Q(catname__icontains=keyword)
-            ).first()
-        return render(request, 'search.html', { 'search_cat': search_cat })
+            )
+            print(search_cats)
+        return render(request, 'search.html', { 'search_cats': search_cats })
 
 class CommentView(View):
     def get(self, request, *args, **kwargs):
