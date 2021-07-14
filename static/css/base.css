@@ -43,6 +43,9 @@ a {
   height: 10vh;
   margin: -5px 5px 5px 5px;
 }
+.logout {
+  padding: 10px;
+}
 .nav {
   position: fixed;
   bottom: 0;
@@ -60,10 +63,9 @@ a {
   height: 10vh;
   text-align: center;
 }
-.welcome-msg {
-  display: inline-block;
+.nav-item > * {
+  display: block;
 }
-.auth-list,
-.auth-item {
+.welcome-msg {
   display: inline-block;
 }
