@@ -21,9 +21,9 @@
           <h2><img src="{{cat.image.first.url}}" alt="catimage" class="cat-profile-img"/>
           <a href="{% url 'crud:cat_detail' cat.pk %}">{{ cat.catname }}</a></h2>
           <ul class="reset-list cat-info-list">
-          <li>성별: {{ cat.gender }}</li>
-          <li>색깔: {{ cat.color }}</li>
-          <li>개냥지수: {{ cat.friendly }}</li>
+          <li>성별 <span>{{ cat.gender }}</span></li>
+          <li>색깔 <span>{{ cat.color }}</span></li>
+          <li>개냥지수 <span>{{ cat.friendly }}</span></li>
           </ul></div>`,
         latlng: new kakao.maps.LatLng({{cat.location_lat}}, {{cat.location_lon}}),
         pk: {{ cat.pk }},

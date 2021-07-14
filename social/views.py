@@ -18,15 +18,15 @@ class IndexTemplateView(generic.ListView):
     template_name = 'index.html'
     object_list = Cat.objects.all()
 
-    def get(self, request):
-        context = super().get_context_data()
-        context['test'] = 'test'
-        return render(request, 'index.html', context)
+    # def get(self, request):
+    #     context = super().get_context_data()
+    #     context['test'] = 'test'
+    #     return render(request, 'index.html', context)
 
-    def post(self, request):
-        context = super().get_context_data()
-        context['position'] = request.POST['position']
-        return render(request, 'index.html', context)
+    # def post(self, request):
+    #     context = super().get_context_data()
+    #     context['position'] = request.POST['position']
+    #     return render(request, 'index.html', context)
 
 class SignupView(View):
     def get(self, request, *args, **kwargs) :
