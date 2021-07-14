@@ -1,3 +1,4 @@
+from django.db.models.query import RawQuerySet
 from social.models import Relationship
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -9,9 +10,6 @@ from django.contrib.auth.models import User
 from social.services import UserService, SignupDto, LoginDto, UpdateDto, RelationShipDto, RelationShipService, CatRelationShipService, CatRelationShipDto
 
 from crud.models import Cat, CatImage
-from config.settings import AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_S3_REGION_NAME,AWS_STORAGE_BUCKET_NAME
-from boto3.session import Session
-from datetime import datetime
 
 class IndexTemplateView(generic.ListView):
     model = Cat
@@ -144,4 +142,14 @@ class FavoriteView(generic.DetailView):
     model = User
     context_object_name = 'user'
     template_name = 'favorite.html'
+
+class FollowView(generic.DetailView):
+    model = User
+    context_object_name= 'user'
+    template_name = 'follow.html'
+
+class FollowerView(generic.DeleteView):
+    model = User
+    context_object_name= 'user'
+    template_name = 'follower.html'
 

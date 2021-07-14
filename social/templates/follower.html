@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/follow.css' %}">
+<div class="around">
+<span class="title">팔로워 목록</span>
+{% for follow in user.relationship.followers.all %}
+<a href="{% url 'social:detail' follow.pk %}">
+    <div class="wrapper">
+        <div class="box">
+            <img class="img" src="{{follow.user.profile.profile_img_url}}">
+                <span class="user">
+                    {{follow}}
+                </span>
+        </div>
+    </div>
+</a>
+<br>
+{% endfor %}
+</div>
+{% endblock content %}
