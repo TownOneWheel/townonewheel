@@ -13,14 +13,12 @@ from crud.models import Cat, CatImage
 
 class IndexTemplateView(generic.ListView):
     model = Cat
-    context_object_name = 'cats'
     queryset = Cat.objects.all()
     template_name = 'index.html'
-    object_list = Cat.objects.all()
 
     def get(self, request):
-        context = super().get_context_data()
-        context['test'] = 'test'
+        self.object_list = self.get_queryset()
+        context = { 'cats' : self.object_list }
         return render(request, 'index.html', context)
 
     def post(self, request):
@@ -46,7 +44,7 @@ class SignupView(View):
     def _build_signup_dto(request) :
         return SignupDto(
             userid=request.POST['userid'],
-            profile_img_url=request.FILES['image'],
+            profile_img_url=request.FILES.get('image'),
             password=request.POST['password'],
             password_check=request.POST['password_check'],
             introduction=request.POST['introduction'],

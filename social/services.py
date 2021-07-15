@@ -19,6 +19,7 @@ class SignupDto():
     name: str
     email: str
     profile_img_url: str
+
 @dataclass
 class LoginDto() :
     userid: str
@@ -55,8 +56,12 @@ class UserService():
         return get_object_or_404(User, pk=user_pk)
     @staticmethod
     def signup(dto: SignupDto):
-
         file = dto.profile_img_url
+        print(file)
+        if file == None:
+            user = User.objects.create_user(username=dto.userid, password=dto.password) 
+            Profile.objects.create(user=user, name=dto.name, introduction=dto.introduction, email=dto.email, profile_img_url=file)
+            return {'error': {'state': False}, 'user' :user}
         session = Session(
             aws_access_key_id=AWS_ACCESS_KEY_ID,
             aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
