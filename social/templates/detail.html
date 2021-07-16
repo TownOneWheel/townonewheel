@@ -1,8 +1,17 @@
 {% extends "base.html" %} {% block content %} {% load static %}
 <link rel="stylesheet" href="{% static 'css/detail.css' %}" />
+
+{% if user.profile.profile_image_url == None %}
+<a href="">
+<div class="box">
+    <img class=img src="{% static 'none_photo.png' %}">
+</div>
+</a>
+{% else %}
 <div class="box">
     <img class=img src="{{user.profile.profile_img_url}}">
 </div>
+{% endif %}
 <h3>{{user.profile.name}}</h3>
 <p>{{user.profile.introduction}}</p>
 {% if request.user == user %}

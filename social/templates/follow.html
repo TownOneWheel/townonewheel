@@ -4,7 +4,7 @@
 <div class="around">
 <span class="title">팔로우 목록</span>
 {% for follow in user.following.all %}
-<a href="{% url 'social:detail' follow.pk %}">
+<a href="{% url 'social:detail' follow.user.pk %}">
     <div class="wrapper">
         <div class="box">
             <img class="img" src="{{follow.user.profile.profile_img_url}}">

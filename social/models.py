@@ -7,7 +7,7 @@ from crud.models import Cat
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     name = models.CharField(max_length=8)
-    profile_img_url = models.TextField(null=True, blank=True)
+    profile_img_url = models.TextField(default=True, null=True, blank=True)
     introduction = models.TextField()
     email = models.EmailField()
     created_at = models.TextField()

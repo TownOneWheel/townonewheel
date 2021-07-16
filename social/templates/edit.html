@@ -3,6 +3,8 @@
 {% block content %}
 <form action="{% url 'social:edit' user.profile.pk %}" method="POST" >
     {% csrf_token %}
+    <input type="file" name="image">
+    <br><br>
     <input type='text' placeholder="이름" value={{user.profile.name}} name="name"/>
     <br/><br/>
     <textarea placeholder="자기소개" name="introduction">{{user.profile.introduction}}</textarea>

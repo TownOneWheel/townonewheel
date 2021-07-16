@@ -16,6 +16,7 @@ class IndexTemplateView(generic.ListView):
     queryset = Cat.objects.all()
     template_name = 'index.html'
 
+
     def get(self, request):
         self.object_list = self.get_queryset()
         context = { 'cats' : self.object_list }
@@ -82,18 +83,19 @@ class EditView(View) :
         return render(request, 'edit.html', context)
 
     def post(self, request, *args, **kwargs):
-        update_dto = self._build_update_dto(request.POST)
+        update_dto = self._build_update_dto(request)
         result = UserService.update(update_dto)
         if (result['error']['state']):
             context = {'error':result['error']}
             return render(request, 'edit.html', context)
         return redirect('index')
     
-    def _build_update_dto(self, post_data):
+    def _build_update_dto(self, request):
         return UpdateDto(
-            name=post_data['name'],
-            email=post_data['email'],
-            introduction=post_data['introduction'],
+            name=request.POST['name'],
+            email=request.POST['email'],
+            profile_img_url=request.FILES.get('image'),
+            introduction=request.POST['introduction'],
             pk=self.kwargs['pk']
         )
     
