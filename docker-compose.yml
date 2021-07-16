@@ -17,14 +17,14 @@ services:
                image: nginx:latest
                container_name: nginx_production
                ports:
-                       - "91:91"
+                       - "80:80"
                volumes:
                        - .:/townonewheel
                        - ./config/nginx/:/etc/nginx/conf.d
                        - ./static:/static
                depends_on:
                        - prod
-                       - prod2
+                         # - prod2
 
         prod:
                container_name: django-production
@@ -38,15 +38,15 @@ services:
                ports:
                        - "8000:8000"
 
-        prod2:
-               container_name: django-production2
-               build:
-                       context: .
-                       dockerfile: Dockerfile
-               env_file: ./config/.env
-               command: sh -c "python manage.py runserver 0:9000"
-               volumes:
-                       - .:/townonewheel/
-               ports:
-                       - "9000:9000"
+                         # prod2:
+                         #  container_name: django-production2
+                         #  build:
+                         # context: .
+                         # dockerfile: Dockerfile
+                         #    env_file: ./config/.env
+                         #  command: sh -c "python manage.py runserver 0:9000"
+                         #   volumes:
+                         # - .:/townonewheel/
+                         # ports:
+                         # - "9000:9000"
 
