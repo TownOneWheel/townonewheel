@@ -29,6 +29,7 @@ class UpdateDto() :
     name: str
     introduction: str
     email: str
+    profile_img_url: str
     pk : str
 
 @dataclass
@@ -57,33 +58,49 @@ class UserService():
     def signup(dto: SignupDto):
 
         file = dto.profile_img_url
-        session = Session(
-            aws_access_key_id=AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-            region_name=AWS_S3_REGION_NAME,
-        )
-        s3 = session.resource('s3')
-        now = datetime.now().strftime('%Y%H%M%S')
-        s3_url="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/"
-        s3.Bucket(AWS_STORAGE_BUCKET_NAME).put_object(
-            Key=now+file.name,
-            Body=file
-        )
-         
-        if(not dto.userid or not dto.password or not dto.password_check or not dto.name or not dto.email or not dto.introduction):
-            return {'error' : {'state' : True, 'msg' : ERROR_MSG['MISSING_INPUT']}}
-        user = User.objects.filter(username=dto.userid, is_active=True)
-        if (len(user)>0):
-            return {'error' : {'state': True, 'msg':ERROR_MSG['EXIST_ID']}}    
-        if User.objects.filter(username=dto.userid, is_active=False):
-            return {'error': {'state': True, 'msg':ERROR_MSG['RESIGN_FROM']}}
-        if (dto.password != dto.password_check):
-            return {'error': {'state': True, 'msg': ERROR_MSG['PASSWORD_CHECK']}}
+        if file is None :
+            if(not dto.userid or not dto.password or not dto.password_check or not dto.name or not dto.email or not dto.introduction):
+                return {'error' : {'state' : True, 'msg' : ERROR_MSG['MISSING_INPUT']}}
+            user = User.objects.filter(username=dto.userid, is_active=True)
+            if (len(user)>0):
+                return {'error' : {'state': True, 'msg':ERROR_MSG['EXIST_ID']}}    
+            if User.objects.filter(username=dto.userid, is_active=False):
+                return {'error': {'state': True, 'msg':ERROR_MSG['RESIGN_FROM']}}
+            if (dto.password != dto.password_check):
+                return {'error': {'state': True, 'msg': ERROR_MSG['PASSWORD_CHECK']}}
 
-        user = User.objects.create_user(username=dto.userid, password=dto.password) 
-        Profile.objects.create(user=user, name=dto.name, introduction=dto.introduction, email=dto.email, profile_img_url=s3_url+now+file.name)   
+            user = User.objects.create_user(username=dto.userid, password=dto.password) 
+            Profile.objects.create(user=user, name=dto.name, introduction=dto.introduction, email=dto.email, profile_img_url=file)   
 
-        return {'error': {'state': False}, 'user' :user}
+            return {'error': {'state': False}, 'user' :user}
+        else:
+            session = Session(
+                aws_access_key_id=AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                region_name=AWS_S3_REGION_NAME,
+            )
+            s3 = session.resource('s3')
+            now = datetime.now().strftime('%Y%H%M%S')
+            s3_url="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/"
+            s3.Bucket(AWS_STORAGE_BUCKET_NAME).put_object(
+                Key=now+file.name,
+                Body=file
+            )
+            
+            if(not dto.userid or not dto.password or not dto.password_check or not dto.name or not dto.email or not dto.introduction):
+                return {'error' : {'state' : True, 'msg' : ERROR_MSG['MISSING_INPUT']}}
+            user = User.objects.filter(username=dto.userid, is_active=True)
+            if (len(user)>0):
+                return {'error' : {'state': True, 'msg':ERROR_MSG['EXIST_ID']}}    
+            if User.objects.filter(username=dto.userid, is_active=False):
+                return {'error': {'state': True, 'msg':ERROR_MSG['RESIGN_FROM']}}
+            if (dto.password != dto.password_check):
+                return {'error': {'state': True, 'msg': ERROR_MSG['PASSWORD_CHECK']}}
+
+            user = User.objects.create_user(username=dto.userid, password=dto.password) 
+            Profile.objects.create(user=user, name=dto.name, introduction=dto.introduction, email=dto.email, profile_img_url=s3_url+now+file.name)   
+
+            return {'error': {'state': False}, 'user' :user}
 
     @staticmethod
     def login(dto: LoginDto):
@@ -104,8 +121,23 @@ class UserService():
     def update(dto: UpdateDto):
         if (not dto.name or not dto.introduction or not dto.email):
             return {'error': {'state': True, 'msg': ERROR_MSG['MISSING_INPUT']}}
+        
+        file = dto.profile_img_url
+        print(1, file)
+        session = Session(
+            aws_access_key_id=AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+            region_name=AWS_S3_REGION_NAME,
+        )
+        s3 = session.resource('s3')
+        now = datetime.now().strftime('%Y%H%M%S')
+        s3_url="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/"
+        s3.Bucket(AWS_STORAGE_BUCKET_NAME).put_object(
+            Key=now+file,
+            Body=file
+        )
 
-        Profile.objects.filter(pk=dto.pk).update(name=dto.name, introduction=dto.introduction, email=dto.email)
+        Profile.objects.filter(pk=dto.pk).update(name=dto.name, introduction=dto.introduction, email=dto.email, profile_img_url = s3_url+now+file)
 
         return {'error':{'state':False}}
 
