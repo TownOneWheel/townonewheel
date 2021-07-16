@@ -13,20 +13,19 @@ from crud.models import Cat, CatImage
 
 class IndexTemplateView(generic.ListView):
     model = Cat
-    context_object_name = 'cats'
     queryset = Cat.objects.all()
     template_name = 'index.html'
-    object_list = Cat.objects.all()
 
-    # def get(self, request):
-    #     context = super().get_context_data()
-    #     context['test'] = 'test'
-    #     return render(request, 'index.html', context)
 
-    # def post(self, request):
-    #     context = super().get_context_data()
-    #     context['position'] = request.POST['position']
-    #     return render(request, 'index.html', context)
+    def get(self, request):
+        self.object_list = self.get_queryset()
+        context = { 'cats' : self.object_list }
+        return render(request, 'index.html', context)
+
+    def post(self, request):
+        context = super().get_context_data()
+        context['position'] = request.POST['position']
+        return render(request, 'index.html', context)
 
 class SignupView(View):
     def get(self, request, *args, **kwargs) :
