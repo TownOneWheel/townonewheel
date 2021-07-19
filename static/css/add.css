@@ -6,7 +6,7 @@
   display: block;
   height: 25px;
   width: 65%;
-  margin: 5px;
+  margin: 10px;
 }
 
 .select {
@@ -16,8 +16,8 @@
 
 .option {
   display: block;
-  margin: 5px;
-  padding: 13px;  
+  /* padding: 13px;  */
+  margin: 10px 0 10px 5px;
 }
 
 .option_list {
@@ -26,22 +26,24 @@
 
 .upload {
   display: block;
-  margin: 10px 5px -5px 5px;
+  margin: -12px 5px -5px 5px;
   height: 80px;
   width: 80px;
   background-image: url(/static/favicon/upload-image.svg);
   background-repeat: no-repeat;
   background-size: auto;
   position: absolute;
-  top: 3vh;
+  top: 0vh;
   right: 5vw;
 }
 
 .btn {
+  text-align: center;
   padding: 5px;
+  margin: 0 0 10px 0;
   width: 40%;
   border-radius: 5px;
   background-color: #fff;
-  margin: 10px;
+  /* margin: 10px; */
 
 }
