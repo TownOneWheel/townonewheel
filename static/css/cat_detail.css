@@ -1,0 +1,55 @@
+.favorite-form {
+  text-align: center;
+}
+
+#catDetailMap {
+  width: 100vw;
+  height: 50vh;
+}
+h2,
+h3 {
+  text-align: center;
+  padding: 2vh 0;
+}
+.cat-profile-img {
+  border-radius: 50%;
+  width: 50vw;
+  height: 50vw;
+}
+.cat-info-list {
+  margin: 5vw;
+}
+.cat-info-list > li {
+  width: auto;
+  margin-bottom: 1vh;
+  display: flex;
+  justify-content: space-between;
+}
+.edit-link {
+  display: block;
+  padding: 0 4vw;
+  text-align: end;
+}
+
+.cat-photo-item {
+  display: inline-block;
+  width: 50%;
+  height: auto;
+  padding: 2vw;
+}
+.comment-section {
+  padding: 1vh 4vw;
+}
+.comment-item {
+  margin: 2vh;
+}
+.comment-form {
+  display: flex;
+  justify-content: space-between;
+}
+.comment-form input {
+  width: 68vw;
+}
+.comment-form button {
+  width: 20vw;
+}

@@ -1,15 +1,29 @@
-.cat-info {
-  padding: 5px;
+.cat-info-window {
+  padding: 15px;
+  width: 200px;
 }
-.cat-info h2 {
-  display: inline-block;
+.cat-info-window h2 {
+  text-align: center;
 }
 .cat-profile-img {
-  width: 5vw;
-  height: 5vw;
+  width: 15vw;
+  height: 15vw;
   border-radius: 50%;
+  border: 1px solid black;
 }
-
+.cat-info-window > h2 > a {
+  display: block;
+  text-align: center;
+}
+.cat-info-list {
+  margin: 1vw;
+}
+.cat-info-list > li {
+  width: auto;
+  margin-bottom: 1vh;
+  display: flex;
+  justify-content: space-between;
+}
 .cat-register {
   font-size: 0.8rem;
   padding: 5px;

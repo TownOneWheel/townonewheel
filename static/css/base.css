@@ -13,8 +13,9 @@ body {
   padding-left: 0;
   margin: 0;
 }
-.content {
+.container {
   background-color: #eeeeee;
+  position: relative;
 }
 h1,
 h2,
@@ -24,4 +25,47 @@ h3 {
 }
 a {
   text-decoration: none;
+}
+.header {
+  height: 10vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.main {
+  height: 80vh;
+  overflow: auto;
+}
+.home {
+  display: inline-block;
+}
+.logo {
+  height: 10vh;
+  margin: -5px 5px 5px 5px;
+}
+.logout {
+  padding: 10px;
+}
+.nav {
+  position: fixed;
+  bottom: 0;
+  height: 5vh;
+  background-color: #eeeeee;
+  display: block;
+  width: 100%;
+  z-index: 1000;
+}
+.nav-list {
+  display: flex;
+}
+.nav-item {
+  width: 25%;
+  height: 10vh;
+  text-align: center;
+}
+.nav-item > * {
+  display: block;
+}
+.welcome-msg {
+  display: inline-block;
 }

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>길냥이지도</title>
+    <link rel="stylesheet" href="/static/css/base.css" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+      integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="/static/css/cat_detail.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1 class="home"><img class="logo" src="/static/logo.svg" alt="홈으로" /></h1>
+
+        <h1 class="welcome-msg">이한결님 안녕하세요</h1>
+        <ul class="reset-list auth-list">
+          <li class="auth-item">
+            <a href="/social/logout/">로그아웃</a>
+          </li>
+        </ul>
+        <nav class="nav">
+          <ul class="reset-list nav-list">
+            <li class="nav-item">
+              <i class="icon fas fa-paw"></i>
+              <a class="nav-link" href="/crud/add/">Add</a>
+            </li>
+            <li class="nav-item">
+              <i class="icon far fa-star"></i>
+              <a class="nav-link" href="/social/favorite/3">Favorite</a>
+            </li>
+            <li class="nav-item">
+              <i class="icon far fa-user"></i>
+              <a class="nav-link" href="/social/detail/3">My Page</a>
+            </li>
+            <li class="nav-item">
+              <i class="icon fas fa-search"></i>
+              <a class="nav-link" href="/crud/search/">Search</a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <main class="main">
+        <section class="cat-detail-section">
+          <h2>테스트냥</h2>
+
+          <p><a href="/crud/cat_edit/12">고양이 정보 수정하기</a></p>
+
+          <form action="/social/catrelationship/12" method="POST">
+            <input
+              type="hidden"
+              name="csrfmiddlewaretoken"
+              value="WtkqaNpQ5Lk4A23Bg9sCNfYDcK68RjnESak0DQRySCaiDSwCbgm6c8YnT5fyu7fI"
+            />
+            <button type="submit">즐겨찾기</button>
+          </form>
+          <h3>사진첩</h3>
+          <ul class="cat-photobook">
+            <li class="cat-photo-item">
+              <img
+                src="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/2021054317chick.png"
+                alt="catimage"
+                style="height: 200px; width: 200px"
+              />
+              <a href="/social/detail/3">test01</a>
+            </li>
+          </ul>
+        </section>
+        <section class="comment-section">
+          <h2>댓글</h2>
+          <ul class="comment-list"></ul>
+          <h2>댓글 작성하기</h2>
+          <form action="/crud/comment/12" method="POST">
+            <input
+              type="hidden"
+              name="csrfmiddlewaretoken"
+              value="WtkqaNpQ5Lk4A23Bg9sCNfYDcK68RjnESak0DQRySCaiDSwCbgm6c8YnT5fyu7fI"
+            />
+            <input type="text" name="content" />
+            <button type="submit">댓글 작성하기</button>
+          </form>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

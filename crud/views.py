@@ -37,6 +37,9 @@ class AddView(View):
         if not catname or not friendly:
             content = {'state': True, 'error': '빈 항목이 있습니다. 모두 채워주세요!'}
             return render(request, 'cat_add.html', content)
+        if not type(friendly) == int:
+            content = {'state': True, 'error': '개냥이 지수는 숫자만 입력 가능합니다!'}
+            return render(request, 'cat_add.html', content)
         if cat_locations in location_file_names:
             with open('./crud/cat_location/{}.txt'.format(cat_locations), 'r') as f:
                 cat_list = f.readlines()
@@ -175,12 +178,12 @@ def CatDelete(request, pk):
 class SearchView(View):
     def get(self, request, *args, **kwargs):
         keyword = request.GET.get('keyword', '')
-        search_cat = {}
+        search_cats = {}
         if keyword:
-            search_cat = Cat.objects.filter(
+            search_cats = Cat.objects.filter(
                 Q(catname__icontains=keyword)
-            ).first()
-        return render(request, 'search.html', { 'search_cat': search_cat })
+            )
+        return render(request, 'search.html', { 'search_cats': search_cats })
 
 class CommentView(View):
     def get(self, request, *args, **kwargs):

@@ -1,7 +1,17 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/favorite.css' %}">
 {% for cat in user.relationship.favorite_cat.all %}
-<a href="{% url 'crud:cat_detail' cat.pk %}">{{cat.catname}}</a>
+<a href="{% url 'crud:cat_detail' cat.pk %}">
+    <div class="wrapper">
+        <div class="box">
+            <img class="img" src="{{cat.image.all.first.url}}">
+                <span class="cat">
+               고양이 이름: {{cat.catname}}
+                </span>
+        </div>
+    </div>
+</a>
 <br>
 {% endfor %}
 {% endblock content %}

@@ -1,3 +1,4 @@
+from django.db.models.query import RawQuerySet
 from social.models import Relationship
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -9,20 +10,16 @@ from django.contrib.auth.models import User
 from social.services import UserService, SignupDto, LoginDto, UpdateDto, RelationShipDto, RelationShipService, CatRelationShipService, CatRelationShipDto
 
 from crud.models import Cat, CatImage
-from config.settings import AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_S3_REGION_NAME,AWS_STORAGE_BUCKET_NAME
-from boto3.session import Session
-from datetime import datetime
 
 class IndexTemplateView(generic.ListView):
     model = Cat
-    context_object_name = 'cats'
     queryset = Cat.objects.all()
     template_name = 'index.html'
-    object_list = Cat.objects.all()
+
 
     def get(self, request):
-        context = super().get_context_data()
-        context['test'] = 'test'
+        self.object_list = self.get_queryset()
+        context = { 'cats' : self.object_list }
         return render(request, 'index.html', context)
 
     def post(self, request):
@@ -48,7 +45,7 @@ class SignupView(View):
     def _build_signup_dto(request) :
         return SignupDto(
             userid=request.POST['userid'],
-            profile_img_url=request.FILES['image'],
+            profile_img_url=request.FILES.get('image'),
             password=request.POST['password'],
             password_check=request.POST['password_check'],
             introduction=request.POST['introduction'],
@@ -86,18 +83,19 @@ class EditView(View) :
         return render(request, 'edit.html', context)
 
     def post(self, request, *args, **kwargs):
-        update_dto = self._build_update_dto(request.POST)
+        update_dto = self._build_update_dto(request)
         result = UserService.update(update_dto)
         if (result['error']['state']):
             context = {'error':result['error']}
             return render(request, 'edit.html', context)
         return redirect('index')
     
-    def _build_update_dto(self, post_data):
+    def _build_update_dto(self, request):
         return UpdateDto(
-            name=post_data['name'],
-            email=post_data['email'],
-            introduction=post_data['introduction'],
+            name=request.POST['name'],
+            email=request.POST['email'],
+            profile_img_url=request.FILES.get('image'),
+            introduction=request.POST['introduction'],
             pk=self.kwargs['pk']
         )
     
@@ -144,4 +142,14 @@ class FavoriteView(generic.DetailView):
     model = User
     context_object_name = 'user'
     template_name = 'favorite.html'
+
+class FollowView(generic.DetailView):
+    model = User
+    context_object_name= 'user'
+    template_name = 'follow.html'
+
+class FollowerView(generic.DeleteView):
+    model = User
+    context_object_name= 'user'
+    template_name = 'follower.html'
 

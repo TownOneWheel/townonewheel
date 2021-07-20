@@ -1,0 +1,20 @@
+<nav class="nav">
+  <ul class="reset-list nav-list">
+    <li class="nav-item">
+      <i class="icon fas fa-paw"></i>
+      <a class="nav-link" href="{% url 'crud:add' %}">Add</a>
+    </li>
+    <li class="nav-item">
+      <i class="icon far fa-star"></i>
+      <a class="nav-link" href="{% url 'social:favorite' user.pk %}">Favorite</a>
+    </li>
+    <li class="nav-item">
+      <i class="icon far fa-user"></i>
+      <a class="nav-link" href="{% url 'social:detail' request.user.pk %}">My Page</a>
+    </li>
+    <li class="nav-item">
+      <i class="icon fas fa-search"></i>
+      <a class="nav-link" href="{% url 'crud:search' %}">Search</a>
+    </li>
+  </ul>
+</nav>
