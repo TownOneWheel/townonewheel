@@ -83,6 +83,7 @@ class EditView(View) :
         return render(request, 'edit.html', context)
 
     def post(self, request, *args, **kwargs):
+        print(1, request.FILES.get('image'))
         update_dto = self._build_update_dto(request)
         result = UserService.update(update_dto)
         if (result['error']['state']):

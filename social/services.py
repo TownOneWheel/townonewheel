@@ -123,7 +123,7 @@ class UserService():
             return {'error': {'state': True, 'msg': ERROR_MSG['MISSING_INPUT']}}
         
         file = dto.profile_img_url
-        print(1, file)
+        print(1, file, dto.name)
         session = Session(
             aws_access_key_id=AWS_ACCESS_KEY_ID,
             aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
@@ -133,11 +133,11 @@ class UserService():
         now = datetime.now().strftime('%Y%H%M%S')
         s3_url="https://django-cat-project.s3.ap-northeast-2.amazonaws.com/"
         s3.Bucket(AWS_STORAGE_BUCKET_NAME).put_object(
-            Key=now+file,
+            Key=now+file.name,
             Body=file
         )
-
-        Profile.objects.filter(pk=dto.pk).update(name=dto.name, introduction=dto.introduction, email=dto.email, profile_img_url = s3_url+now+file)
+        print(2)
+        Profile.objects.filter(pk=dto.pk).update(name=dto.name, introduction=dto.introduction, email=dto.email, profile_img_url = s3_url+now+file.name)
 
         return {'error':{'state':False}}
 

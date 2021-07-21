@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form action="{% url 'social:edit' user.profile.pk %}" method="POST" >
+<form action="{% url 'social:edit' user.profile.pk %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="file" name="image">
+    <input type="file" name="image" />
     <br><br>
     <input type='text' placeholder="이름" value={{user.profile.name}} name="name"/>
     <br/><br/>
