@@ -9,8 +9,8 @@
 <div class="cat-register total">
   <form class="cat-form" action="{% url 'crud:add' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <label>이름<input type="text" name="catname" placeholder="길냥이 이름" class="input" /></label>
-    <label>개냥이 지수<input type="text" name="friendly" placeholder="사람과의 친밀도 (%)" class="input" /></label>
+    <label aria-placeholder="고양이 이름"><input type="text" name="catname" placeholder="길냥이 이름" class="input" /></label>
+    <label aria-placeholder="개냥이 지수"><input type="text" name="friendly" placeholder="사람과의 친밀도 (%)" class="input" /></label>
     <label class="file-input upload"><input hidden type="file" name="img" multiple /></label>
     <div class="select">
       <label class="option">성별
@@ -36,7 +36,7 @@
     </div>
     <input class="location-lat" type="hidden" name="location_lat" value="null" />
     <input class="location-lon" type="hidden" name="location_lon" value="null" />
-    <div id="map" style="width: 100%; height: 50vh; border: solid 1px black;"></div>
+    <div id="map" style="width: 99%; height: 40vh; border: solid 1px black;"></div>
     {% if state %}
     <p>{{error}}</p>
     {% endif %}
