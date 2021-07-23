@@ -10,7 +10,7 @@ class Cat(BaseField):
     gender = models.CharField(max_length=20, null=True, blank=True)
     color = models.CharField(max_length=20, null=True, blank=True)
     neutering = models.CharField(max_length=10, null=True, blank=True)
-    friendly = models.CharField(max_length=64, default='0')
+    friendly = models.IntegerField(default='0')
 
     location = models.TextField()
     location_lat = models.FloatField(default=37.54490018658278)

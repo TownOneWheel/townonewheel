@@ -19,6 +19,7 @@ class SignupDto():
     name: str
     email: str
     profile_img_url: str
+
 @dataclass
 class LoginDto() :
     userid: str
@@ -56,7 +57,6 @@ class UserService():
         return get_object_or_404(User, pk=user_pk)
     @staticmethod
     def signup(dto: SignupDto):
-
         file = dto.profile_img_url
         if file is None :
             if(not dto.userid or not dto.password or not dto.password_check or not dto.name or not dto.email or not dto.introduction):
