@@ -13,7 +13,9 @@
 <h3>{{user.profile.name}}</h3>
 <p>{{user.profile.introduction}}</p>
 {% if request.user == user %}
-<a href="{% url 'social:edit' user.pk %}">수정하기</a>
+<div class="edit">
+    <a href="{% url 'social:edit' user.pk %}"><i class="fas fa-edit"></i></a>
+</div>
 {% endif %}
 <div class="follow">
     <div>
