@@ -17,26 +17,32 @@
 {% endif %}
 <div class="follow">
     <div>
-        <a href="{% url 'social:follower' user.pk %}"><span>팔로워 {{user.relationship.followers.all.count}}</span></a>
+        {%if user.relationship.followers.all.count == ''%}
+        <a href="{% url 'social:follower' user.pk %}"><span>팔로워 <br>0</span></a>
+        {% else %}
+        <a href="{% url 'social:follower' user.pk %}"><span>팔로워 <br>{{user.relationship.followers.all.count}}</span></a>
+        {% endif %}
     </div>
     <div>
-        <a href="{% url 'social:follow' user.pk %}"><span>팔로우 {{user.following.all.count}}</span></a>
+        <a href="{% url 'social:follow' user.pk %}"><span>팔로우 <br>{{user.following.all.count}}</span></a>
     </div>    
 </div>
 {% if request.user != user %}
 <form action="{% url 'social:relationship' user.pk %}" method='POST'>
     {% csrf_token %}
     {% if request.user in user.relationship.followers.all %}
-    <button type='submit'>팔로우 취소</button>
+    <button class='follow_btn' type='submit'>팔로우 취소</button>
     {% else %}
-    <button type='submit'>팔로우</button>
+    <button class='follow_btn' type='submit'>팔로우</button>
     {% endif %}
 </form>
 {% endif %}
-<div>등록한 고양이</div>
+<div class='cat_title'>등록한 고양이</div>
 <br>
-{% for cat in user.upload.all %}
-<a href="{% url 'crud:cat_detail' cat.pk %}">{{cat.catname}}</a>
-{% endfor %}
+<div class='cat_list'>
+    {% for cat in user.upload.all %}
+    <a class='cat_list' href="{% url 'crud:cat_detail' cat.pk %}">{{cat.catname}}</a>
+    {% endfor %}
+</div>
 
 {% endblock content %}

@@ -6,8 +6,10 @@
 <h2>{{error.msg}}</h2>
 {% endif %}
 <div class='wrapper'>
-    <img class="logo" src="{% static 'logo.svg' %}" />
-    <form class=signupForm action="{% url 'social:signup' %}" method="POST" enctype="multipart/form-data">
+    <a href="{% url 'index' %}" title="홈">
+        <img class="logo" src="{% static 'logo.svg' %}" />
+    </a>
+        <form class=signupForm action="{% url 'social:signup' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <span class="box">
             <label for="file">프로필 사진 등록</label>

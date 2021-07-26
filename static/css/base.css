@@ -32,10 +32,6 @@ a {
   justify-content: space-between;
   align-items: center;
 }
-.main {
-  height: 80vh;
-  overflow: auto;
-}
 .home {
   display: inline-block;
 }
