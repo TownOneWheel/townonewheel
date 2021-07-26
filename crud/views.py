@@ -37,9 +37,11 @@ class AddView(View):
         if not catname or not friendly:
             content = {'state': True, 'error': '빈 항목이 있습니다. 모두 채워주세요!'}
             return render(request, 'cat_add.html', content)
+
         # if not type(friendly) == int:
         #     content = {'state': True, 'error': '개냥이 지수는 숫자만 입력 가능합니다!'}
         #     return render(request, 'cat_add.html', content)
+
         if cat_locations in location_file_names:
             with open('./crud/cat_location/{}.txt'.format(cat_locations), 'r') as f:
                 cat_list = f.readlines()
