@@ -20,7 +20,7 @@ services:
                        - "80:80"
                volumes:
                        - .:/townonewheel
-                       - ./config/nginx/:/etc/nginx/conf.d
+                       - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
                        - ./static:/static
                depends_on:
                        - prod
