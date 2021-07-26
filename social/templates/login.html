@@ -4,7 +4,9 @@
 <h2>{{error.msg}}</h2>
 {% endif %}
 <div class="wrapper">
-  <img class="logo" src="{% static 'logo.svg' %}" />
+  <a href="{% url 'index' %}" title="홈">
+    <img class="logo" src="{% static 'logo.svg' %}" />
+  </a>
   <form action="{% url 'social:login' %}" method="POST">
     {% csrf_token %}
     <span class="box">

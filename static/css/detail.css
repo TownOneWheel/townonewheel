@@ -9,3 +9,48 @@
   height: 100%;
   object-fit: cover;
 }
+.follow_btn{
+  background-color: rgb(36, 87, 226);
+  color: white;
+  border-radius: 5px; 
+  border: solid 8px transparent;
+  position: absolute;
+  top: 10vh;
+  right: 30vw;
+  font-weight: bold;
+}
+.follow{
+  position: absolute;
+  top: 20vh;
+  right: 15vw;
+  display: grid;
+  grid-template-columns:1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 10px;
+  text-align: center;
+}
+.follow div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.follow div:nth-child(1){
+  grid-row: 1/2;
+  grid-column: 3/4;
+}
+.follow div:nth-child(2){
+  grid-row: 1/2;
+  grid-column: 4/6;
+}
+
+.follow a{
+  font-weight: bold;
+  color: black;
+}
+.cat_title{
+  font-weight: bold;
+}
+.cat_list{
+  display: flex;
+  justify-content: space-between;
+}

@@ -8,7 +8,7 @@
 {% endblock head %} {% block content %}
 <section class="cat-detail-section">
   <h2>
-    <img class="cat-profile-img src="{{cat.image.first.url}}" alt="catimage" />
+    <img class="cat-profile-img" src="{{cat.image.first.url}}" alt="catimage" />
     <p>{{cat.catname}}</p>
   </h2>
   <form class="favorite-form" action="{% url 'social:catrelationship' cat.pk %}" method="POST">
